@@ -3,6 +3,8 @@
 /*----------------------------------------------*/
 
 var Configs = {
+    //Change this to your firebase url
+    
     BACKEND_URL: 'https://dsykes.firebaseio.com/',
     isStatic: true,
     
