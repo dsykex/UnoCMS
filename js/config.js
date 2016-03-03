@@ -4,7 +4,6 @@
 
 var Configs = {
     BACKEND_URL: 'https://dsykes.firebaseio.com/',
-    controller: 'Ctrl',
     isStatic: true,
     
     /*-----   Database Configs  -----*/

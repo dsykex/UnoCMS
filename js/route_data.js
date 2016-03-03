@@ -11,8 +11,5 @@ var route_data = {
             template: 'views/404.html',
             needLogin: false,
         },
-        {
-        
-        }
     ]
 };
