@@ -1,14 +1,114 @@
-<div class="content" style="height:1000px; background:#000; padding:10px; position:relative;">
-    <h1 style="color:#000;">GANG SHIT BOI</h1>
+
+<div id="content">
+
+    <div class="row">
+        <div class="small-12 columns">
+            <div class="middle">
+                <div id="titleText">
+                <!--<h1 style="font-size:150px; color:#fff; ">UnoCMS</h1>-->
+                <img style="width:300px;" src="uploads/img/unoIcon.png" />
+                    <h1 style="font-size:90px; color:#fff; ">UnoCMS</h1>
+                    <h3 style="color:#ADD1FF; font-weight:bold;letter-spacing:10px; font-size:17px;">Built with AngularJS</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="blue-overlay"></div>
+    <div class="background"></div>
 </div>
-<div class="subContent" style="height:100vh; background:#fff; padding:10px; z-index=-1; position:relative;">
-    <h2>UH OH!</h2>
+<div id="subContent">
+    <div class="middle">
+        <div id="specs_1">
+            <div class="row">
+                <div class="columns">
+                    <i style="font-size:100px; color:#fff;" class="fi-wrench"></i>
+                    <p style="color:#fff; font-size:37px;">Dev-Friendly</p>
+                    <p style="color:#fff;">Forget about heavy CRUD development and route structure Uno has successfully tooken the load of backend programming off your shoulders.</p>
+                </div>
+                <div class="columns">
+                    <i style="font-size:100px; color:#fff;" class="fi-results"></i>
+                    <p style="color:#fff; font-size:37px;">Realtime Sync</p>
+                    <p style="color:#fff;">Built-in realtime synchronization at your disposal for advanced apps and websites totally entirely centered on your database and end-goal!</p>
+                </div>
+                <div class="columns">
+                    <i style="font-size:100px; color:#fff;" class="fi-database"></i>
+                    <p style="color:#fff; font-size:37px">Dynamic Data</p>
+                    <p style="color:#fff">Configure your page's data dynamically without the need of extra programming and debugging. Our routing system keeps data in sync without the headache of error.</p>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="small-12 columns">
+                    <a ng-href="http://unodemo.flypapermagazine.com/#/home" style="font-size:30px; color:#fff; border:1px solid #fff; margin-top:15%;" class="button hollow large">DEMO</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="grey-overlay"></div>
+    <div class="background-2"></div>
 </div>
+
 <script>
-    function paralax(){
+    var paralax = function(){
         var ypos = window.pageYOffset;
-        var content = document.getElementById("content");
-        content.style.top = ypos * 0.4 + 'px';
-    };
-    window.addEventListener("scroll", paralax)
+        var content = document.getElementById('content');
+        var titleText = document.getElementById('titleText');
+        
+        var specs_1 = document.getElementById('specs_1');
+        content.style.top = ypos * 0.8 + 'px';
+        console.log(ypos);
+        
+        if(ypos >= 150){
+            titleText.classList.add('animated');
+            titleText.classList.add('bounceOut');
+        }
+        
+        if(ypos <= 150){
+            titleText.classList.remove('animated');
+            titleText.classList.remove('bounceOut');
+             titleText.classList.add('animated');
+            titleText.classList.add('bounceIn');
+        }
+        
+        if(ypos >= 905){
+            content.classList.add('animated');
+            content.classList.add('fadeOut');
+        }
+        if(ypos <= 355){
+            content.classList.remove('animated');
+            content.classList.remove('fadeOut');
+            content.classList.add('animated');
+            content.classList.add('fadeIn');
+        }
+        
+        if(ypos <= 650){
+    
+            specs_1.classList.remove('animated');
+            specs_1.classList.remove('bounceInDown');
+            specs_1.classList.remove('bounceOut');
+            specs_1.classList.add('animated');
+            specs_1.classList.add('bounceOut');
+        }
+        
+        if(ypos >=  650 && ypos <= 1480){
+           
+            specs_1.classList.remove('animated');
+            specs_1.classList.remove('bounceInDown');
+            specs_1.classList.remove('bounceOut');
+            specs_1.classList.add('animated');
+            specs_1.classList.add('bounceInDown');
+        }
+        
+        if(ypos >= 1480){
+
+            specs_1.classList.remove('animated');
+            specs_1.classList.remove('bounceInDown');
+                        specs_1.classList.remove('bounceOut');
+            specs_1.classList.add('animated');
+            specs_1.classList.add('bounceOut');
+        }
+    
+
+    }
+    window.addEventListener('scroll', paralax);
 </script>

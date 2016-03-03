@@ -6,32 +6,90 @@ body:before {
   width: 100%;
   font-family: 'Open Sans', sans-serif;
   height: 10px;
+    background:#2582fc;
   z-index: 100;
   -webkit-box-shadow: 0px 0px 10px rgba(0,0,0,.8);
   -moz-box-shadow: 0px 0px 10px rgba(0,0,0,.8);
   box-shadow: 0px 0px 10px rgba(0,0,0,.8);
 }
 
-.header{
- -webkit-box-shadow: 0px 0px 50px rgba(0,0,0,.3);
-  -moz-box-shadow: 0px 0px 50px rgba(0,0,0,.3);
-  box-shadow: 0px 0px 50px rgba(0,0,0,.3);
+.middle{
+    margin-top:25vh;
+    text-align:center;
 }
 
-.content{
+h2{
+    color:#2582fc;
+}
+
+.specs_1{
+    
+}
+
+.background{
+    background-image: url('../uploads/img/mountain-1.jpg');
+    background-size: 130% 100%;
+    height:105vh;
+    position: relative;
+    top:-190%;
+    z-index: -5;
+    -webkit-filter:blur(3px);
+    opacity:0.9;
+}
+
+.background-2{
+    background-image: url('../uploads/img/mountain-2.jpg');
+    background-size: 130% 100%;
+    height:105vh;
+    width:100%;
+    position: relative;
+    /*-webkit-filter:blur(5px);*/
+    top:-199%;
+    z-index: -3;
+    opacity:0.9;
+}
+
+.blue-overlay{
+    background:#2582fc;
+    background-size: 100% 100%;
+    height:105vh;
+    position:relative;
+    top:-85%;
+    opacity:0.5;
+    z-index: -4;
+}
+
+.grey-overlay{
+    background:#0e0e0e;
+    background-size: 100% 100%;
+    height:105vh;
+    position:relative;
+    top:-95%;
+    opacity:0.9;
+    z-index: -2;
+}
+
+#content{
     position:relative;
     z-index: -1;
-    height: 600px;
-    background: #2582fc;
+    height: 100vh;
+    width:100%;
+    /*background: #2582fc;*/
 }
 
-.subContent{
+.demo-btn{
+    font-size:30px; 
+    color:#fff;
+    border:1px solid #fff; 
+    margin-top:15%;
+}
+
+#subContent{
     position:relative;
-    z-index: 1;
+    z-index: 5;
+    overflow:hidden;
     height:100vh;
     width:100%;
-    margin-top:10px;
-    background: #444;
 }
 
 .nav-list{

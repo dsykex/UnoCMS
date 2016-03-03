@@ -13,23 +13,8 @@
         <title>UnoCMS: Create something awesome!</title>
     </head>
     <body ng-controller="CustomCtrl" ng-init="uinfo()">
-        <div class="off-canvas-wrapper">
-            <div class="off-canvas-wrapper-inner" data-off-canvas-wrapper>
-                <div class="off-canvas position-left" style="background:#fff" id="offCanvas" data-off-canvas>
-                    <ul class="nav-list">
-                        <li><i class="fi-"></i><a ng-href="#/home">Home</a></li>
-                    </ul>
-                </div>
-                <div class="off-canvas-content" data-off-canvas-content style="overflow:hidden;">
-                    <div class="title-bar" style="background:#1e1e1e;">
-                      <div class="title-bar-left">
-                        <a class="button hollow small" style="margin-bottom:-2px; margin-right:10px; padding:10px;" data-open="offCanvas"><i class="fi-list"></i></a>
-                        <span class="title-bar-title">Site Title</span>
-                      </div>
-                    </div>
-                    <div id="ng" ng-view></div>
-                </div>
-            </div>
+        <div class="pageContent">
+            <div id="ng" ng-view></div>
         </div>
         <script src="https://cdn.firebase.com/js/client/2.3.0/firebase.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -46,7 +31,6 @@
         <script src="js/dep/angular-moment.js"></script>
         <script src="js/dep/ngtimeago.js"></script>
         <script src="js/dep/ng-file-upload.min.js"></script>
-        
         
         <!-- AngularFire -->
         <script src="js/dep/rangy-core.js"></script>
