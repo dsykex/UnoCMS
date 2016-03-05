@@ -1,7 +1,5 @@
-
 <div id="content">
-
-    <div class="row">
+    <div class="row align-middle" style="height:100vh">
         <div class="small-12 columns">
             <div class="middle">
                 <div id="titleText">
@@ -13,33 +11,33 @@
             </div>
         </div>
     </div>
-    <div class="blue-overlay"></div>
     <div class="background"></div>
+    <div class="blue-overlay"></div>
 </div>
 <div id="subContent">
     <div class="middle">
         <div id="specs_1">
-            <div class="row">
+            <div class="row align-middle" style="height:100vh">
                 <div class="columns">
-                    <i style="font-size:100px; color:#fff;" class="fi-wrench"></i>
-                    <p style="color:#fff; font-size:37px;">Dev-Friendly</p>
-                    <p style="color:#fff;">Forget about heavy CRUD development and route structure Uno has successfully tooken the load of backend programming off your shoulders.</p>
+                    <i style="font-size:170px; color:#fff;" class="fi-wrench text-shadow"></i>
+                    <p style="color:#fff; font-size:37px;" class="text-shadow">Dev-Friendly</p>
+                    <p style="color:#fff;" class="text-shadow">Forget about heavy CRUD development and route structure Uno has successfully tooken the load of backend programming off your shoulders.</p>
                 </div>
                 <div class="columns">
-                    <i style="font-size:100px; color:#fff;" class="fi-results"></i>
-                    <p style="color:#fff; font-size:37px;">Realtime Sync</p>
-                    <p style="color:#fff;">Built-in realtime synchronization at your disposal for advanced apps and websites totally entirely centered on your database and end-goal!</p>
+                    <i style="font-size:170px; color:#fff;" class="fi-results text-shadow"></i>
+                    <p style="color:#fff; font-size:37px;" class="text-shadow">Realtime Sync</p>
+                    <p style="color:#fff;" class="text-shadow">Built-in realtime synchronization at your disposal for advanced apps and websites totally entirely centered on your database and end-goal!</p>
                 </div>
                 <div class="columns">
-                    <i style="font-size:100px; color:#fff;" class="fi-database"></i>
-                    <p style="color:#fff; font-size:37px">Dynamic Data</p>
-                    <p style="color:#fff">Configure your page's data dynamically without the need of extra programming and debugging. Our routing system keeps data in sync without the headache of error.</p>
+                    <i style="font-size:170px; color:#fff;" class="fi-database" class="text-shadow"></i>
+                    <p style="color:#fff; font-size:37px" class="text-shadow">Dynamic Data</p>
+                    <p style="color:#fff" class="text-shadow">Configure your page's data dynamically without the need of extra programming and debugging. Our routing system keeps data in sync without the headache of error.</p>
 
                 </div>
             </div>
             <div class="row">
                 <div class="small-12 columns">
-                    <a ng-href="http://unodemo.flypapermagazine.com/#/home" style="font-size:30px; color:#fff; border:1px solid #fff; margin-top:15%;" class="button hollow large">DEMO</a>
+                    <a ng-href="http://unodemo.flypapermagazine.com/#/home" style="font-size:30px; color:#fff; border:1px solid #fff; margin-top:-20%;" class="button hollow large">DEMO</a>
                 </div>
             </div>
         </div>
@@ -47,23 +45,55 @@
     <div class="grey-overlay"></div>
     <div class="background-2"></div>
 </div>
-
+<div id="template-info">
+    <div class="middle">
+        <div class="row" style="margin-bottom:150px;">
+            <div class="small-12 columns">
+                <h1 style="color:#fff; font-size:70px;" class="text-shadow">And Much More!</h1>
+<p style="color:#fff;" class="text-shadow"><b>Get Involved</b> by cloning the repository and checkout UnoCMS for yourself! We have a detailed documentation page that goes every every feature and option UnoCMS has to offer along with other information to improve development time and quality.</p>
+            
+            </div>
+        </div>
+        <div class="row">
+            <div class="columns">
+                <div id="docs-tab">
+                    <a ng-href="#/docs"><i class="fi-clipboard text-shadow" style="font-size:220px; color:#fff;"></i></a>
+                <h2 style="color:#fff" class="text-shadow">Docs</h2>
+                </div>
+            </div>
+            <div class="columns">
+                <div id="repo-tab">
+                <a ng-href="https://github.com/dsykex/UnoCMS"><i class="fi-social-github text-shadow" style="font-size:220px; color:#fff;"></i></a>
+                <h2 style="color:#fff" class="text-shadow">Repo</h2>
+                </div>
+            </div>
+ 
+        </div>
+    </div>
+    <div class="white-overlay"></div>
+    <div class="background-3"></div>
+</div>
 <script>
     var paralax = function(){
         var ypos = window.pageYOffset;
         var content = document.getElementById('content');
+        var subContent = document.getElementById('subContent')
         var titleText = document.getElementById('titleText');
-        
+        var tempInfo = document.getElementById('template-info');
         var specs_1 = document.getElementById('specs_1');
+        var docs = document.getElementById('docs-tab');
+        var repo = document.getElementById('repo-tab');
+        
         content.style.top = ypos * 0.7 + 'px';
+        
         console.log(ypos);
         
-        if(ypos >= 150){
+        if(ypos >= 70){
             titleText.classList.add('animated');
             titleText.classList.add('bounceOut');
         }
         
-        if(ypos <= 150){
+        if(ypos <= 210){
             titleText.classList.remove('animated');
             titleText.classList.remove('bounceOut');
              titleText.classList.add('animated');
@@ -74,7 +104,7 @@
             content.classList.add('animated');
             content.classList.add('fadeOut');
         }
-        if(ypos <= 355){
+        if(ypos <= 700){
             content.classList.remove('animated');
             content.classList.remove('fadeOut');
             content.classList.add('animated');
@@ -107,8 +137,34 @@
             specs_1.classList.add('animated');
             specs_1.classList.add('bounceOut');
         }
+        
+        if(ypos <= 1600){
+            docs.classList.remove('animated');
+            docs.classList.remove('bounceInLeft');
+            docs.classList.remove('bounceOutLeft');
+            docs.classList.add('animated');
+            docs.classList.add('bounceOutLeft');
+            
+            repo.classList.remove('animated');
+            repo.classList.remove('bounceInRight');
+            repo.classList.remove('bounceOutRight');
+            repo.classList.add('animated');
+            repo.classList.add('bounceOutRight');
+        }
     
-
+        if(ypos >= 1600){
+            repo.classList.remove('animated');
+            repo.classList.remove('bounceInRight');
+            repo.classList.remove('bounceOutRight');
+            repo.classList.add('animated');
+            repo.classList.add('bounceInRight');
+            
+            docs.classList.remove('animated');
+            docs.classList.remove('bounceInLeft');
+            docs.classList.remove('bounceOutLeft');
+            docs.classList.add('animated');
+            docs.classList.add('bounceInLeft');
+        }
     }
     window.addEventListener('scroll', paralax);
 </script>
