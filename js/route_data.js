@@ -4,12 +4,17 @@ var route_data = {
             route: '/home',
             homePage: true,
             template: 'views/home.html',
-            needLogin: false,
+            needLogin: false
         },
         {
             route: '/404',
             template: 'views/404.html',
-            needLogin: false,
+            needLogin: false
         },
+        {
+            route: '/docs',
+            template: 'views/docs.html',
+            needLogin: false
+        }
     ]
 };

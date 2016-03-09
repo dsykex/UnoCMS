@@ -1,0 +1,215 @@
+
+    <div class="title-bar">
+        <div class="title-bar-left">
+            <a class="menu-icon" type="button" data-open="offCanvasLeft"></a>
+            <span class="title-bar-title">UnoCMS: <b>Documentation</b></span>
+        </div>
+    </div>
+
+<div class="row">
+    <div class="small-3 columns">
+        <div class="docs-nav">
+            <h6>General Docs</h6>
+            <ul>
+                <li><a href="#configs">> Configs</a></li>
+                <li></li>
+            </ul>
+        </div>
+    </div>
+    <div class="small-9 columns">
+        <div class="docs-body">
+            <p>UnoCMS takes away the heavy lifting of creating and defining hard-coded CRUD functions, and overal site structure. Below is everything you'll need to know to get started using Uno.</p>
+            <hr>
+            <h3 id="configs"># Route Configurations</h3>
+            <div class="config-option">
+                <code>bindTo_[table_name]: []</code>
+
+                <p>This option binds the route/page to a specific object from the given database based on the route id parameter. if you specify any relationships the table has with other tables, it would automatically assign and pull the children based on your <code>dbRelations: []</code> settings.</p>
+                <p styl="font-style:italic;">Example:</p>
+                <pre><code>
+                db: ['blog_posts'],
+                dbRelations: [
+                    {blog_posts: ['blog_comments', 'parent_id']}
+                ],
+
+                ...
+                {
+                    route: '/postDetail/:child',
+                    template: 'views/specificPostTemplate.html',
+                    ...
+                    data: [
+                        {bindTo_blog_posts: []}
+                    ]
+                }
+                </code></pre>
+                <p style="font-size:16px;">This route would pull the object from the <b>'blog_posts'</b> table in the database with the id that matches the route's <em>:child</em> parameter and asign it to the scope object of <em>'obj'</em>. All data from the <b>'blog_comments'</b> database with the <b>'parent_id'</b> column equal to the object's id would be set to the scope object of <em>'blog_comments_children'</em> which can be used to display any comments of a particular post in the view.</p>
+            </div>
+                  <hr>
+        <div class="config-option">
+            <code>get_[table_name]: [dynamic_param, tbl_column, dynamic_value, isList]</code>
+            <p>This option gets the object or objects from the database of <b>table_name</b> where the column is equal to the <b>dynamic_value</b> given and sets the data to the scope object defined in the <em>dynamic_param</em> parameter. Based on the <em>isList</em> parameter, the data will set the scope object in an array format if set to true and singular object format if set to false. </p>
+            <p>**NOTE** : if the <b>dynamic_param's</b> value is set to <em>parent</em>, the column, value, and isList parameters are not needed. This it will set a scope object called <em>'obj'</em> to the object in the database with the id equal to the routes id param which can be used in the view. More detail on dynamic parameters are listed <a href="#">here</a></p>
+            <p>Also If the table you wish to get a parent object from also has child relations to other tables, use the <b>bindTo</b> method instead.</p>
+            
+            <p>Example: <b>Without Dynamic Params</b></p>
+            <pre><code>
+            db: ['blog_posts'],
+            
+            ...
+            {
+                route: '/myPosts',
+                template: 'views/myPostsTemplate.html',
+                ...
+                data: [
+                    {get_blog_posts: ['myPosts', 'user_id', 1, true]}
+                ]
+            }
+            </code></pre>
+            <p style="font-size:16px;">
+                This will pull all the <em>blog_posts</em> objects from the database with the <em>user_id</em> column value of 1. Because the <b>isList</b> parameter is set to true, it will return them in an array format which can be looped through in the view for instance:
+            <pre><code class="html">
+            &lt;div ng-repeat="post in myPosts"&gt;
+                &lt;h1&gt; post.user_id &lt;/h1&gt;
+            &lt;/div&gt;
+            </code></pre>
+            </p>
+            <p>Example: <b>With Dynamic Params</b></p>
+            <pre><code>
+            db: ['blog_posts'],
+            
+            ...
+            {
+                route: '/myPosts/:child',
+                template: 'views/myPostsTemplate.html',
+                ...
+                data: [
+                    {get_blog_posts: ['parent']}
+                ]
+            }
+            </code></pre>
+            <p>
+                This will simply get the <em>blog_post</em> object from the database with the id that equals the route's <em>:child</em> parameter for instance:
+                <pre><code>127.0.0.1/#/myPosts/1</code></pre>
+            </p>
+        </div>
+        <hr>
+        <div class="config-option">
+            <code>get_[table_name]_by: [table_column, obj, obj_column, assigned_obj]</code>
+            <p>This option gets data from the database table given by <b>table_name</b> where the data's <em>table_column</em> property equals the <b>obj</b>'s <em>obj_column</em> value. and then sets the results in a scope object of the value given in the <em>assigned_obj</em> parameter.</p>
+            
+            <p>Example: <b>Using Dynamic Parameters</b></p>
+            <pre><code>
+            db: ['blog_posts', 'blog_comments'],
+            
+            ...
+            
+            {
+                route: '/myPostActivity:child',
+                template: 'views/myPostActivity.html',
+                
+                ...
+                
+                data: [
+                    {get_blog_posts: ['userPosts', 'user_id', 'parent', true]},
+                    {get_blog_comments_by: ['parent_id', 'usersPosts', 'id', 'userComments']}
+                ]
+            }
+            </code></pre>
+            <p style="font-size:16px;">This will create a list of posts from the <b>blog_posts</b> data table where their <em>user_id</em> field is equal to the route's <em>:child</em> parameter and asign the data to the scope object  called <b>userPosts</b>. From that it will pull all of the comments from the <b>blog_comments</b> table where the <em>parent_id</em> field is equal to the id of each of the <em>userPosts</em> objects, created a dynamic array of data and storing it in a scope object called <b>userComments</b>.</p>
+        </div>
+        <hr>
+        <div class="config-option">
+            <code>insertFor_[table_name]: [fields_array, callback]</code>
+            <p style="font-size:16px;">This option creates a database insertion action. You can create and assign callbacks to do custom actions after the data has been inserted successfully. Click <a ng-href="#">here</a> for more detail on custom callbacks.</p>
+            
+            Example:
+            <pre><code>
+            db: ['blog_posts'],
+            
+            ...
+            
+            {
+                route: '/create_post',
+                template: 'views/create_post.html',
+                
+                ...
+                
+                data: [
+                    {insertFor_blog_posts: [['title', 'body', 'user_id', 'createdAt'], ['postCreated', 'obj']]}
+                ]
+            }
+            </code></pre>
+            <pre><code>
+            &lt;form&gt;
+                &lt;input type="text" ng-model="obj.title" />
+                &lt;textarea ng-model="obj.body">&lt;/textarea>
+                &lt;input type="button" ng-click="blog_posts_inserter(obj)" />
+            &lt;/form>
+            </code></pre>
+            <p>This will create a scope object function called <b>blog_posts_inserter</b> which takes only the object your trying to insert as a parameter.</p>
+            <p>***NOTE*** : createdAt & user_id wouldnt need form fields because they are static_parameters. Click <a ng-href="#">here</a> for more detail on static parameters</p>
+        </div>
+        <hr>
+        <div class="config-option">
+            <code>updateFor_[table_name]: [fields_array, callback]</code>
+            <p>
+            This option creates a database updater action. You can create and assign callbacks to do custom actions after the data has been inserted successfully. Click <a ng-href="#">here</a> for more detail on custom callbacks.
+            </p>
+                        Example:
+            <pre><code>
+            db: ['blog_posts'],
+            
+            ...
+            
+            {
+                route: '/create_post',
+                template: 'views/create_post.html',
+                
+                ...
+                
+                data: [
+                    {updateFor_blog_posts: [['title', 'body', 'user_id', 'createdAt'], ['postCreated', 'obj']]}
+                ]
+            }
+            </code></pre>
+            <pre><code>
+            &lt;form&gt;
+                &lt;input type="text" ng-model="obj.title" />
+                &lt;textarea ng-model="obj.body">&lt;/textarea>
+                &lt;input type="button" ng-click="blog_posts_updater(obj)" />
+            &lt;/form>
+            </code></pre>
+            <p>This will create a scope object function called <b>blog_posts_updater</b> which takes only the object your trying to insert as a parameter.</p>
+            <p>***NOTE*** : createdAt & user_id wouldnt need form fields because they are static_parameters. Click <a ng-href="#">here</a> for more detail on static parameters</p>
+        </div>
+        <div class="config-option">
+            <code>deleteFrom_[table_name]: [collection, callback]</code>
+            <p>
+                This option creates a database object deletion action and also removes all child data of an object based on the dbRelations settings. You can create and assign callbacks to do custom actions after the data has been inserted successfully. Click <a ng-href="#">here</a> for more detail on custom callbacks.
+            </p>
+            <pre><code>
+            db: ['blog_posts', 'blog_comments'],
+            dbRelations: [
+                {blog_posts: ['blog_comments', 'parent_id']}
+            ],
+            ...
+            
+            {
+                route: '/postDetail:child',
+                template: 'views/postDetail.html',
+                
+                ...
+                
+                data: [
+                    {bindTo_blog_posts: []},
+                    {deleteFrom_blog_posts: [undefined, ['postDeleted', 'obj']]}
+                ]
+                
+            }
+            </code></pre>
+            <pre><code>
+            &lt;a ng-click="blog_posts_remover(obj.id)>&lt;/a>
+            </code></pre>
+            <p>This will make a link that would delete the parent object from <b>blog_posts</b> data table along with all of the <b>blog_comments</b> data that is a child of that particular post because of the <em>dbRelations</em> setting and then execute the custom scope <b>postDeleted</b> callback function which can be programmed to do whatever I wish.  Click <a ng-href="#">here</a> for more detail on custom callbacks.</p>
+        </div>
+</div>
