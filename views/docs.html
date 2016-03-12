@@ -46,7 +46,7 @@
             </div>
                   <hr>
         <div class="config-option">
-            <code>get_[table_name]: [dynamic_param, tbl_column, dynamic_value, isList]</code>
+            <code>get_[table_name]: [dynamic_param, column, dynamic_value, isList]</code>
             <p>This option gets the object or objects from the database of <b>table_name</b> where the column is equal to the <b>dynamic_value</b> given and sets the data to the scope object defined in the <em>dynamic_param</em> parameter. Based on the <em>isList</em> parameter, the data will set the scope object in an array format if set to true and singular object format if set to false. </p>
             <p>**NOTE** : if the <b>dynamic_param's</b> value is set to <em>parent</em>, the column, value, and isList parameters are not needed. This it will set a scope object called <em>'obj'</em> to the object in the database with the id equal to the routes id param which can be used in the view. More detail on dynamic parameters are listed <a href="#">here</a></p>
             <p>Also If the table you wish to get a parent object from also has child relations to other tables, use the <b>bindTo</b> method instead.</p>
@@ -182,6 +182,7 @@
             <p>This will create a scope object function called <b>blog_posts_updater</b> which takes only the object your trying to insert as a parameter.</p>
             <p>***NOTE*** : createdAt & user_id wouldnt need form fields because they are static_parameters. Click <a ng-href="#">here</a> for more detail on static parameters</p>
         </div>
+        <hr>
         <div class="config-option">
             <code>deleteFrom_[table_name]: [collection, callback]</code>
             <p>
@@ -210,6 +211,10 @@
             <pre><code>
             &lt;a ng-click="blog_posts_remover(obj.id)>&lt;/a>
             </code></pre>
-            <p>This will make a link that would delete the parent object from <b>blog_posts</b> data table along with all of the <b>blog_comments</b> data that is a child of that particular post because of the <em>dbRelations</em> setting and then execute the custom scope <b>postDeleted</b> callback function which can be programmed to do whatever I wish.  Click <a ng-href="#">here</a> for more detail on custom callbacks.</p>
+            <p>This will make a link that would delete the parent object from <b>blog_posts</b> data table along with all of the <b>blog_comments</b> data that is a child of that particular post because of the <em>dbRelations</em> setting and then execute the custom scope <b>postDeleted</b> callback function which can be programmed customarily.  Click <a ng-href="#">here</a> for more detail on custom callbacks.</p>
+        </div><hr>
+        <div class="config-option">
+            <code>add_[table_name]_modifier: [column, operator, callback]</code>
+            <p>This option creates a modifier action that </p>
         </div>
 </div>
