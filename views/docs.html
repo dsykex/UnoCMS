@@ -19,6 +19,7 @@
     <div class="small-9 columns">
         <div class="docs-body">
             <p>UnoCMS takes away the heavy lifting of creating and defining hard-coded CRUD functions, and overal site structure. Below is everything you'll need to know to get started using Uno.</p>
+            <p><b>**NOTE**:</b> static columns such as <em>user_id</em> and <em>parent_id</em> are automatically set within the query to the current loggedin user, and the <b>:child</b> parameter value of the route.</p>
             <hr>
             <h3 id="configs"># Route Configurations</h3>
             <div class="config-option">
@@ -188,6 +189,7 @@
             <p>
                 This option creates a database object deletion action and also removes all child data of an object based on the dbRelations settings. You can create and assign callbacks to do custom actions after the data has been inserted successfully. Click <a ng-href="#">here</a> for more detail on custom callbacks.
             </p>
+            <p>Example:</p>
             <pre><code>
             db: ['blog_posts', 'blog_comments'],
             dbRelations: [
@@ -215,6 +217,172 @@
         </div><hr>
         <div class="config-option">
             <code>add_[table_name]_modifier: [column, operator, callback]</code>
-            <p>This option creates a modifier action that </p>
-        </div>
+            <p>This option creates a modifier action that modifys the numeric values of specific object property's.</p>
+            <p>Example:</p>
+            <pre><code>
+            db: ['blog_posts'],
+            
+            ...
+            
+            {
+                route: '/postDetail:child',
+                template: 'views/postDetail.html',
+                ...
+                data: [
+                    {bindTo_blog_posts: []},
+                    {add_blog_posts_modifier: ['likes', '+', ['postLikedCallback', 'obj']]}
+                ]
+            }
+            </code></pre>
+            <pre><code>
+            &lt;a ng-click="blog_posts_likes_mod(obj.likes, 1)">Like Post&lt;/a>
+            </code></pre>
+            <p>This link will add 1 to the total of the post's likes due to the <em>likes</em> property/column given and the <b>+</b> operator defined in the config. the operator can ofcourse be subtraction, division, and multiplication and the value given in the link can be changed to say add 10 to the total of likes if wanted.</p>
+            
+        </div><hr>
+        <div class="config-option">
+            <code>get_parent_relatives: [column, assign_obj, db_table]</code>
+            <p>This option gets all of the <em>db_table</em> object's where the <b>column</b>'s data is equal too or shares similarity with the parent object of the route.</p>
+            <p>Example: </p>
+            <pre><code>
+            db: ['blog_posts']
+            ...
+            {
+                route: '/postDetail:child',
+                template: 'views/postDetail.html',
+                ...
+                data: [
+                    {bindTo_blog_posts: []},
+                    {get_parent_relatives: ['tags', 'related_posts', 'blog_posts']}
+                ]
+            }
+            </code></pre>
+            <p>This will get all <b>blog_posts</b> objects which have the same tags or share similarity which the parent <b>blog_posts</b> object and then store them in a scope object called <b>related_posts</b> as an array.</p>
+        </div><hr>
+        <div class="config-option">
+            <code>get_[table_name]_editor: [editorId, fields, callback]</code>
+            <p>This option initializes the editor actions for the text editor based on the <em>editorId</em> given. The editor handles inserting and updating actions without the need for creating <b>insertFor</b> and <p>updateFor</p> configs.</p>
+            <p>Example:</p>
+            <pre><code>
+            db: ['blog_posts'],
+            editorCols: ['body'],
+            ...
+            {
+                route: '/createPost',
+                template: 'views/createPostView.html',
+                ...
+                data: [
+                    {add_blog_posts_insertEditor: ['postBodyField', ['title', 'tags', 'createdAt', 'body', 'user_id'], ['postCreated', 'obj']]}
+                ]
+            }
+            </code></pre>
+            <pre><code>
+                &lt;form enctype="multipart/form-data">
+                    &lt;input type="text" placeholder="Title" ng-model="obj.title"/>
+                    &lt;input type="text" placeholder="Tags (seperate with commas)" ng-model="obj.tags" />
+                    &lt;input type="text" placeholder="Category" ng-model="obj.category" />
+                    &lt;u-layout l="small-12" ng-if="currentUser">
+                        &lt;u-editor type="l" eid="postBodyField">&lt;/u-editor>
+                    &lt;/u-layout>
+                &lt;/form>
+            </code></pre>
+            <p>This will allow the editor's actions from the <b>u-editor</b> directive to be used within as long as the editor's id matches the id from the configs which in this case in <b>postBodyField</b>. This will allow for a post to be created and added to the <b>blog_posts</b> database.</p>
+            <p class="callout primary"><b>**NOTE**:</b> columns within the <b>editorCols</b> config doesnt have to be added to the form setup because the columns specified within the <em>editorCols</em> config gets recognized automatically. If you wish to creat and update action based editor, simply replace <em>insert</em> with <em>update</em> so it looks like <code>add_blog_posts_updateEditor: [...]</code>.</p>
+        </div><hr>
+        <div class="config-option">
+            <code>set_filter: [obj, amountPerPage, pageNumber]</code>
+            <p>This option adds a view limiter to the <b>obj</b> which shows a certain amount of objects in a loop per "page". The amount of objects it shows is the <em>amountPerPage</em> * <em>pageNumber</em>.</p>
+            <p>Example:</p>
+            <pre><code>
+            db: ['blog_posts'],
+            ...
+            {
+                route: '/allPosts',
+                template: 'views/allPosts.html',
+                ...
+                data: [
+                    {set_filter: ['blog_posts', 3, 1]}
+                ]
+            }
+            </code></pre>
+            <p>This will set the <b>blog_posts</b> scope object to only show 3 posts per page. If the <em>pageNum</em> variable was set to say 2, it would show 6 posts. the html for this example would look like this:</p>
+            <pre><code>
+            &lt;div ng-repeat="posts in blog_posts | limitTo: blog_posts_limit()">
+                &lt;h1>post.title&lt;/h1>
+            &lt;/div>
+            &lt;a ng-if="hasMore_blog_posts()" ng-click="show_blog_posts()">View More&lt;/a>
+            &lt;a ng-if="!hasMore_blog_posts()" ng-click="hide_blog_posts()">Hide&lt;/a>
+            </code></pre>
+            <p style="margin-top:22px;">Since the <em>amountPerPage</em> is set to 3, the <em>show_blog_posts()</em> function would reveal 3 more posts and add them to the list. the <em>hide_blog_posts()</em> function simply hides them all from view. Using the <em>hasMore_blog_posts()</em> function, this is possible to dynamically list <b>blog_posts</b> items.</p>
+        </div><hr>
+        <div class="config-option">
+            <code>add_upload: [function, directory, preview_obj]</code>
+            <p>This option creates a file upload action for uploading files to the specified destination.</p>
+            <p>Example:</p>
+            <pre><code>
+            db: ['users'],
+            ...
+            {
+                route: '/manageProfile:child',
+                template: 'views/manageProfile.html',
+                ...
+                data:[
+                    {get_users: ['parent']},
+                    {set_specials: ['default']},
+                    {updateFor_users: [['display_name', 'password', 'picture'], ['userUpdated', 'db', 'obj', 'id', 'user_id']]},
+                    {add_upload: ['uploadPicture', 'media/img/prof_pics/', 'thumb']}
+                ]
+            }
+            </code></pre>
+            <p style="margin-top:22px;">The <em>uploadPicture</em> function would upload a profile picture to the directory given and then assign the file url to the scope object of <em>thumb</em> which can then be used to preview the newly upload image. The html for this route would look like this:</p>
+            <pre><code>
+            &lt;form>
+                &lt;h5>Display Name&lt;/h5>
+                &lt;input type="text" ng-model="obj.display_name" />
+                &lt;div class="callout">
+                    &lt;img src="thumb" alt="" width="170" height="170" class="thumbnail"/>
+                    &lt;u-upload action="uploadPicture" file="image/*">&lt;/u-upload>
+                    &lt;div ng-show="uploadPicture_isUploading">&lt;span style="height:20px; color:#000; width: {{progress}}%">&lt;/span>&lt;/div>
+                &lt;/div>
+                &lt;input type="button" class="hollow button" ng-click="users_updater(obj)" value="Save Changes"/>
+            &lt;/form>
+            </code></pre>
+            <p style="margin-top:20px;"></p>
+        </div><hr>
+        <div class="config-option">
+            <code>set_specials: ['default']</code>
+            <p>This option sets all static scope objects to the parent object's value. Using the example above, <b>set_specials</b> would set the users <em>picture</em> property/field to the scope object <em>thumb</em> which is usefull for routes that are used for editing and managing objects such as the <em>manageProfile</em> route above, showing the pre-existing profile picture of a user then changing the value of the user's picture once a new one is uploaded. If the parent object has a column which uses the editor (defined in the <em>editorCols</em> config), this also sets the scope object <em>inputText</em>, which the editor is bound to, to the value of the parent objects <em>editorCol</em> column. Below shows the static properties and scope objects that are assigned.</p>
+        
+            <ul style="list-style:bullet;">
+                <li>scope.inputText = obj.[editorCol]</li>
+                <li>scope.thumb = obj.picture</li>
+                <li>scope.video = obj.video</li>
+                <li>scope.audio = obj.audio</li>
+                <li>scope.file obj.file</li>
+            </ul>
+        </div><hr>
+        <div class="config-option">
+            <code>parent_db: [table_name]</code>
+            <p>This option is used to set the parent object of a route from the database defined in <b>table_name</b> where it's id equals the <em>:child</em> route parameter. (Yes, family trees exist in programming.)</p>
+            <p>Example:</p>
+            <pre><code>
+            db: ['forum_topics', 'forum_boards'],
+            dbRelations: [
+                forum_boards: ['forum_topics', 'preant_id']
+            ],
+            ...
+            {
+                route: '/createTopic:child',
+                template: 'views/createTopic.html',
+                ...
+                data:[
+                    {parent_db: ['forum_boards']},
+                    {get_forum_topics_insertEditor: ['topicBodyField', ['parent_id', 'title', 'body', 'user_id', 'createdAt'], ['topicAdded', 'db', 'obj', 'user_id']]}
+                ]
+            }
+            </code></pre>
+            <p style="margin-top:22px;">
+                The <b>parent_db</b> option will set the scope object <em>parent_obj</em> to the <em>forum_boards</em> object where the id is equal to the route's <em>:child</em> parameter. So when the user goes to fill out the form to create a topic,the topic's parent would be the <b>forum_board</b> object which is set based on the route as traditional forums are.
+            </p>
+        </div><hr>
 </div>
