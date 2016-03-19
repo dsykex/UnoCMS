@@ -1,28 +1,134 @@
 
-    <div class="title-bar">
-        <div class="title-bar-left">
-            <a class="menu-icon" type="button" data-open="offCanvasLeft"></a>
-            <span class="title-bar-title">UnoCMS: <b>Documentation</b></span>
-        </div>
+<div id="heade" class="title-bar" style="z-index:999">
+    <div class="title-bar-left">
+        <img src="uploads/img/unoIcon.png" alt="" style="height:30px;"/>
+        <span class="title-bar-title">UnoCMS: <b>Documentation</b></span>
     </div>
-
+    <div class="title-bar-right">
+        <a type="button hollow">Sup</a>
+    </div>
+</div>
 <div class="row">
     <div class="small-3 columns hide-for-small-only">
         <div class="docs-nav">
-            <h6>General Docs</h6>
+            <h4>General Docs</h4>
             <ul>
-                <li><a href="#configs">> Configs</a></li>
-                <li></li>
+                <li><a ng-click="goToElement('generalStuff')">> Main Information.</a></li>
+                <li><a ng-click="goToElement('globalConfigs')">> Global Configs.</a></li>
+            </ul>
+        </div>
+        <div class="docs-nav">
+            <h4>Route Configs</h4>
+            <ul>
+                <li><a ng-click="goToElement('bindTo')">> bindTo</a></li>
+                                <li><a ng-click="goToElement('getObject')">> get_object</a></li>
+                                <li><a ng-click="goToElement('getObjectBy')">> get_object_by</a></li>
+                                <li><a ng-click="goToElement('insertFor')">> insertFor</a></li>
+                                <li><a ng-click="goToElement('updateFor')">> updateFor</a></li>
+                                <li><a ng-click="goToElement('deleteFrom')">> deleteFrom</a></li>
+                                <li><a ng-click="goToElement('addMod')">> add_modifier</a></li>
+                                <li><a ng-click="goToElement('getRelatives')">> get_relatives</a></li>
+                                <li><a ng-click="goToElement('getEditor')">> get_editor</a></li>
+                                                <li><a ng-click="goToElement('addUpload')">> add_upload</a></li>
+                                <li><a ng-click="goToElement('setSpecials')">> set_specials</a></li>
+                                <li><a ng-click="goToElement('parentDb')">> parent_db</a></li>
+                                <li><a ng-click="goToElement('watcher')">> add_watcher</a></li>
+                                <li><a ng-click="goToElement('updater')">> add_updater</a></li>
             </ul>
         </div>
     </div>
     <div class="columns">
-        <div class="docs-body">
-            <p>UnoCMS takes away the heavy lifting of creating and defining hard-coded CRUD functions, and overal site structure. Below is everything you'll need to know to get started using Uno.</p>
+        <div class="docs-body" style="height:100vh; overflow-y:auto;">
+            <div id="generalStuff">
+                <h3 id="general_docs"># General Configs</h3>
+                <p><b style="color:#2582fc;">UnoCMS</b> takes away the heavy lifting of creating and defining hard-coded CRUD functions, and overall site/app structure. The framework uses 3 controllers: </p>
+                <ul>
+                    <li><h5>AppCtrl:</h5> <p>Initializes all global variables, functions, and pulls all the database data that presets the scope to use throughout your website, or application.</p></li>
+                    <li><h5>Ctrl:</h5> <p>The main controller that handles all routing data and configurations. his dynamic controller constantly changes scope data and objects based on the route currently being viewed and the route's given configurations.</p></li>
+                    <li><h5>MyCtrl:</h5><p>This controller is where you would place all custom scope functions/actions, variables, callbacks functions and so on.</p></li>
+                </ul>
+                <p>Uno uses <b>Firebase</b> for user authentication with internal site membership and also social network platforms. You can easily cchange the firebase url in the configs to your firebase app to initialize membershiping.</p>
+                <p class="callout text-center" style="color:#2582fc; font-weight:bold;">If a user is signed in, it would create a scope object called <em>currentUser</em>  which can be used for login checking purposes and other data related to a logged in user.</p>
+                <div id="globalConfigs">
+                <h3># Global Configurations</h3>
+                <p>Theres a number of configurations used to setup and manage your site/app's overall functionality and behavior depending on what you wish to accomplish. the base project setup when you first clone the repo, has preset configs already but below is a list of all of them.</p>
+                <ul class="global-configs">
+                    <li>
+                        <h4>siteTitle: [title]</h4>
+                        <p>This sets the title of the site to display in the header bar.</p>
+                    
+                    </li>
+                    <li>
+                        <h4>BACKEND_URL: [firebaseUrl]</h4>
+                        <p>This is the url of your firebase backend used for handling user registration and login requests. You must create and provide your own social platform api keys if you wish to implement logging in with social networks.</p>
+                    </li>
+                    <li>
+                        <h4>isStatic: [boolean]</h4>
+                        <p>Determines if the site/app is static or not, if true then this would specify your creating a site that is basically information based with no backend (such as this one) and wouldn't need database configurations set.</p>
+                    </li>
+                    <li>
+                        <h4>db: [database_tables]</h4>
+                        <p>Assigns the databases which the site will use and manipulate. each database assigned will set a scope object by the name of the database table. Example below.</p>
+                    <pre><code>
+                    db: ['users', 'user_messages']
+                    // scope object would be scope.users and scope.user_messages
+                    </code></pre>
+                    </li>
+                    <li>
+                        <h4>dbRelations: [parent_database: [child_database, column]]</h4>
+                        <p>Sets a relationship between databases where the <b>child_database</b>'s <em>relative_column</em> is equal to the <b>parent_database</b>'s id. Example Below</p>
+                    <pre><code>
+                    db: ['users', 'user_messages'],
+                    dbRelations: [users: ['users_messages', 'user_id']]
+                    </code></pre>
+                        <p class="callout error text-center" style="color:#fff; font-weight:bold;">Uno uses static database columns, and dynamic variables throughout the framework such as <em>parent_id</em>, <em>user_id</em>, and <em>createdAt</em>(for time). The <em>user_id</em> column relates to the users id (obviously right?)  and when using it in <em>insertFor</em> route-actions or even <em>updateFor</em>, it automatically pulls the currently logged in user's id and sets it in the query (More Info on insertFor and updateFor route-configs below). As for <em>parent_id</em>, this is the retrieves and sets the value of a routes <em>:child</em> parameter when using it in <em>insertFor</em> and <em>updateFor</em> actions. You must include these columns in your database structure in order for the dynamics to perform properly.</p>
+                    </li>
+                    <li>
+                        <h4>editorCols: [columns]</h4>
+                        <p>This sets the column names of databases which will are used for editors. Example below</p>
+                    <pre><code>
+                    db: ['blog_posts'],
+                    editorCols: ['body'] // the 'body' field of blog_posts
+                    </code></pre>
+                        <p class="callout error">*NOTE*: All editor columns in the database must be set to <b>LONGTEXT</b> instead of <b>nvarchar</b> due to the html input which can take up alot of characters.</p>
+                    </li>
+                    <li>
+                        <h4>modRanks: [ranks]</h4>
+                        <p>This will set the user ranks which are moderator based. All users with ranks listed ithin these will set the scope object <em>isAdmin</em> to true for the logged in user and allow them to access special parts of your site or app depending on what you want. Example below.</p>
+                        <pre><code>
+                        modRanks: ['a', 'mod'] // a for administrator :)
+                        </code></pre>
+                    </li>
+                    <li>
+                        <h4>strictForGuests: [boolean]</h4>
+                        <p>Setting this to true will initialize a strict systemto limit guests to seeing content based on the <b>strictLevel</b> config listed below</p>
+                    </li>
+                    <li>
+                        <h4>strictLevel: [level]</h4>
+                        <p>If you have <b>strictForGuests</b> set to true, this will define how strict you want it. the levels are <b>light</b>, <b>medium</b>, and <b>heavy</b>, based on the setting, it will limit users to how much content they can filter through as a guest when using the <em>set_filter</em> route-data config. More info on <em>set_filter</em>is listed below.</p>
+                    </li>
+                    <li>
+                        <h4>global_data: [data_options]</h4>
+                        <p>This behaves just as route-data configs but sets is used on a global scale rather than route based. See the route configurations below to learn the options available for use.</p>
+                    </li>
+                </ul>
+                </div>
+            </div>
             <p><b>**NOTE**:</b> static columns such as <em>user_id</em> and <em>parent_id</em> are automatically set within the query to the current loggedin user, and the <b>:child</b> parameter value of the route.</p>
-            <hr>
-            <h3 id="configs"># Route Configurations</h3>
-            <div class="config-option">
+            <div class="callout">
+                <h3># Route-Data Callbacks</h3>
+                <p>Route callbacks are actions you create that would be triggered after a certain action was called in your route_data configs.</p>
+                <p>For Example:</p>
+                <pre><code>
+                db: ['blog_posts'],
+                ...
+                data:[
+                    {get_blog_posts_updateEditor: ['postBodyField', ['title', 'picture', 'body', 'user_id', 'excerpt', 'category'], ['postUpdated', 'obj', 'user_id']]},
+                ]
+                </code></pre>
+            </div><hr>
+            <h3 id="routeDataDocs"># Route Configurations</h3>
+            <div id="bindTo" class="config-option">
                 <code>bindTo_[table_name]: []</code>
 
                 <p>This option binds the route/page to a specific object from the given database based on the route id parameter. if you specify any relationships the table has with other tables, it would automatically assign and pull the children based on your <code>dbRelations: []</code> settings.</p>
@@ -46,7 +152,7 @@
                 <p style="font-size:16px;">This route would pull the object from the <b>'blog_posts'</b> table in the database with the id that matches the route's <em>:child</em> parameter and asign it to the scope object of <em>'obj'</em>. All data from the <b>'blog_comments'</b> database with the <b>'parent_id'</b> column equal to the object's id would be set to the scope object of <em>'blog_comments_children'</em> which can be used to display any comments of a particular post in the view.</p>
             </div>
                   <hr>
-        <div class="config-option">
+        <div id="getObject" class="config-option">
             <code>get_[table_name]: [dynamic_param, column, dynamic_value, isList]</code>
             <p>This option gets the object or objects from the database of <b>table_name</b> where the column is equal to the <b>dynamic_value</b> given and sets the data to the scope object defined in the <em>dynamic_param</em> parameter. Based on the <em>isList</em> parameter, the data will set the scope object in an array format if set to true and singular object format if set to false. </p>
             <p>**NOTE** : if the <b>dynamic_param's</b> value is set to <em>parent</em>, the column, value, and isList parameters are not needed. This it will set a scope object called <em>'obj'</em> to the object in the database with the id equal to the routes id param which can be used in the view. More detail on dynamic parameters are listed <a href="#">here</a></p>
@@ -94,7 +200,7 @@
             </p>
         </div>
         <hr>
-        <div class="config-option">
+        <div id="getObjectBy" class="config-option">
             <code>get_[table_name]_by: [table_column, obj, obj_column, assigned_obj]</code>
             <p>This option gets data from the database table given by <b>table_name</b> where the data's <em>table_column</em> property equals the <b>obj</b>'s <em>obj_column</em> value. and then sets the results in a scope object of the value given in the <em>assigned_obj</em> parameter.</p>
             
@@ -119,7 +225,7 @@
             <p style="font-size:16px;">This will create a list of posts from the <b>blog_posts</b> data table where their <em>user_id</em> field is equal to the route's <em>:child</em> parameter and asign the data to the scope object  called <b>userPosts</b>. From that it will pull all of the comments from the <b>blog_comments</b> table where the <em>parent_id</em> field is equal to the id of each of the <em>userPosts</em> objects, created a dynamic array of data and storing it in a scope object called <b>userComments</b>.</p>
         </div>
         <hr>
-        <div class="config-option">
+        <div id="insertFor" class="config-option">
             <code>insertFor_[table_name]: [fields_array, callback]</code>
             <p style="font-size:16px;">This option creates a database insertion action. You can create and assign callbacks to do custom actions after the data has been inserted successfully. Click <a ng-href="#">here</a> for more detail on custom callbacks.</p>
             
@@ -151,7 +257,7 @@
             <p>***NOTE*** : createdAt & user_id wouldnt need form fields because they are static_parameters. Click <a ng-href="#">here</a> for more detail on static parameters</p>
         </div>
         <hr>
-        <div class="config-option">
+        <div id="updateFor" class="config-option">
             <code>updateFor_[table_name]: [fields_array, callback]</code>
             <p>
             This option creates a database updater action. You can create and assign callbacks to do custom actions after the data has been inserted successfully. Click <a ng-href="#">here</a> for more detail on custom callbacks.
@@ -184,7 +290,7 @@
             <p>***NOTE*** : createdAt & user_id wouldnt need form fields because they are static_parameters. Click <a ng-href="#">here</a> for more detail on static parameters</p>
         </div>
         <hr>
-        <div class="config-option">
+        <div id="deleteFrom" class="config-option">
             <code>deleteFrom_[table_name]: [collection, callback]</code>
             <p>
                 This option creates a database object deletion action and also removes all child data of an object based on the dbRelations settings. You can create and assign callbacks to do custom actions after the data has been inserted successfully. Click <a ng-href="#">here</a> for more detail on custom callbacks.
@@ -215,7 +321,7 @@
             </code></pre>
             <p>This will make a link that would delete the parent object from <b>blog_posts</b> data table along with all of the <b>blog_comments</b> data that is a child of that particular post because of the <em>dbRelations</em> setting and then execute the custom scope <b>postDeleted</b> callback function which can be programmed customarily.  Click <a ng-href="#">here</a> for more detail on custom callbacks.</p>
         </div><hr>
-        <div class="config-option">
+        <div id="addMod" class="config-option">
             <code>add_[table_name]_modifier: [column, operator, callback]</code>
             <p>This option creates a modifier action that modifys the numeric values of specific object property's.</p>
             <p>Example:</p>
@@ -240,7 +346,7 @@
             <p>This link will add 1 to the total of the post's likes due to the <em>likes</em> property/column given and the <b>+</b> operator defined in the config. the operator can ofcourse be subtraction, division, and multiplication and the value given in the link can be changed to say add 10 to the total of likes if wanted.</p>
             
         </div><hr>
-        <div class="config-option">
+        <div id="getRelatives" class="config-option">
             <code>get_parent_relatives: [column, assign_obj, db_table]</code>
             <p>This option gets all of the <em>db_table</em> object's where the <b>column</b>'s data is equal too or shares similarity with the parent object of the route.</p>
             <p>Example: </p>
@@ -259,7 +365,7 @@
             </code></pre>
             <p>This will get all <b>blog_posts</b> objects which have the same tags or share similarity which the parent <b>blog_posts</b> object and then store them in a scope object called <b>related_posts</b> as an array.</p>
         </div><hr>
-        <div class="config-option">
+        <div id="getEditor" class="config-option">
             <code>get_[table_name]_editor: [editorId, fields, callback]</code>
             <p>This option initializes the editor actions for the text editor based on the <em>editorId</em> given. The editor handles inserting and updating actions without the need for creating <b>insertFor</b> and <p>updateFor</p> configs.</p>
             <p>Example:</p>
@@ -289,7 +395,7 @@
             <p>This will allow the editor's actions from the <b>u-editor</b> directive to be used within as long as the editor's id matches the id from the configs which in this case in <b>postBodyField</b>. This will allow for a post to be created and added to the <b>blog_posts</b> database.</p>
             <p class="callout primary"><b>**NOTE**:</b> columns within the <b>editorCols</b> config doesnt have to be added to the form setup because the columns specified within the <em>editorCols</em> config gets recognized automatically. If you wish to creat and update action based editor, simply replace <em>insert</em> with <em>update</em> so it looks like <code>add_blog_posts_updateEditor: [...]</code>.</p>
         </div><hr>
-        <div class="config-option">
+        <div id="setFilter" class="config-option">
             <code>set_filter: [obj, amountPerPage, pageNumber]</code>
             <p>This option adds a view limiter to the <b>obj</b> which shows a certain amount of objects in a loop per "page". The amount of objects it shows is the <em>amountPerPage</em> * <em>pageNumber</em>.</p>
             <p>Example:</p>
@@ -315,7 +421,7 @@
             </code></pre>
             <p style="margin-top:22px;">Since the <em>amountPerPage</em> is set to 3, the <em>show_blog_posts()</em> function would reveal 3 more posts and add them to the list. the <em>hide_blog_posts()</em> function simply hides them all from view. Using the <em>hasMore_blog_posts()</em> function, this is possible to dynamically list <b>blog_posts</b> items.</p>
         </div><hr>
-        <div class="config-option">
+        <div id="addUpload" class="config-option">
             <code>add_upload: [function, directory, preview_obj]</code>
             <p>This option creates a file upload action for uploading files to the specified destination.</p>
             <p>Example:</p>
@@ -349,7 +455,7 @@
             </code></pre>
             <p style="margin-top:20px;"></p>
         </div><hr>
-        <div class="config-option">
+        <div id="setSpecials" class="config-option">
             <code>set_specials: ['default']</code>
             <p>This option sets all static scope objects to the parent object's value. Using the example above, <b>set_specials</b> would set the users <em>picture</em> property/field to the scope object <em>thumb</em> which is usefull for routes that are used for editing and managing objects such as the <em>manageProfile</em> route above, showing the pre-existing profile picture of a user then changing the value of the user's picture once a new one is uploaded. If the parent object has a column which uses the editor (defined in the <em>editorCols</em> config), this also sets the scope object <em>inputText</em>, which the editor is bound to, to the value of the parent objects <em>editorCol</em> column. Below shows the static properties and scope objects that are assigned.</p>
         
@@ -361,7 +467,7 @@
                 <li>scope.file obj.file</li>
             </ul>
         </div><hr>
-        <div class="config-option">
+        <div id="parentDb" class="config-option">
             <code>parent_db: [table_name]</code>
             <p>This option is used to set the parent object of a route from the database defined in <b>table_name</b> where it's id equals the <em>:child</em> route parameter. (Yes, family trees exist in programming.)</p>
             <p>Example:</p>
@@ -385,6 +491,46 @@
                 The <b>parent_db</b> option will set the scope object <em>parent_obj</em> to the <em>forum_boards</em> object where the id is equal to the route's <em>:child</em> parameter. So when the user goes to fill out the form to create a topic,the topic's parent would be the <b>forum_board</b> object which is set based on the route as traditional forums are.
             </p>
         </div><hr>
+        <div id="watcher" class="config-option">
+            <code>add_[table_name]_watcher: []</code>
+            <p>This option initializes a constant database watcher that pulls new data from the database where the <b>table_name</b> is specified and adds it to the scope datbase object, resulting in a realtime data structure.</p>
+            <p>Example:</p>
+            <pre><code>
+            db: ['blog_posts'],
+            ...
+            {
+                route: '/blog_feed',
+                template: 'views/blog_feed.html',
+                ...
+                data: [
+                    {set_filter: ['blog_posts', 3, 1]},
+                    {add_blog_posts_watcher: []}
+                ]
+            }
+            </code></pre>
+            <p style="margin-top:22px;">The route will initialize a watcher over the <b>blog_posts</b> database along with a filter to only display 3 posts at a time. When a new post is created by a user the watcher will notice a new data oject has been added to the database and then add it to the database's scope object of <b>blog_posts</b>, making realtime syncronization easy to enable particular routes.</p>
+        </div><hr>
+        <div id="updater" class="config-option">
+            <code>add_[table_name]_updater: []</code>
+            <p>This option initializes a constant updater for all objects of a database defined in <b>table_name</b>. When a object is updated or deleted, the updater will automatically update the object's properties or even remove it from the scope if its been deleted all in realtime.</p>
+            <p>Example:</p>
+            <pre><code>
+            db: ['blog_posts'],
+            ...
+            {
+                route: '/postView:child',
+                template: 'views/postView:child',
+                ...
+                data: [
+                    {bindTo_blog_posts: []},
+                    {add_blog_posts_updater: []},
+                ]
+            }
+            </code></pre>
+            <p style="margin-top:22px;">
+                If a user, say for instance, changes the title of the <b>blog_posts</b> object or even the body, the updater would pull the changes and apply them to the object. So users can see changes and fixes in realtime.
+            </p>
+</div>
 </div>
 </div>
 </div>

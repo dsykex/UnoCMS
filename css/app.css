@@ -15,7 +15,48 @@ body:before {
 
 hr{
     opacity:0.5;
-    margin:50px;
+    margin:30px;
+}
+
+#globalConfigs{
+    border:1px solid #ccc;
+    padding:14px;
+    background:#f8f8f8;
+    broder-radius:10px;
+}
+
+.callout.error{
+    background: red;
+}
+
+.config-option{
+    padding:15px;
+    border:1px solid #d1d1d1;
+    background:#f7f7f7;
+    border-radius:8px;
+}
+
+pre{
+    margin-bottom:15px;
+}
+
+.global-configs{
+    
+}
+
+.global-configs li{
+    list-style: none;
+    margin-bottom:30px;
+}
+
+.global-configs p{
+    font-size:16px;
+    color:#444;
+}
+
+.global-configs li h4{
+    color:#2582fc;
+    font-size:20px;
 }
 
 code{
@@ -36,6 +77,11 @@ h2{
 
 .docs-nav{
     padding:5px;
+    margin-bottom:25px;
+}
+
+.docs-nav > ul > li{
+    margin-bottom: 7px;
 }
 
 .docs-nav > ul > li > a{
@@ -43,9 +89,9 @@ h2{
     font-size:15px;
 }
 
-.docs-nav > h6{
+.docs-nav > h4{
     text-transform: uppercase;
-    font-size:12px;
+    font-size:13px;
     color:#2582fc;
     letter-spacing: 3px;
 }
@@ -59,9 +105,7 @@ h2{
 }
 
 .docs-body{
-
-    background:#f5f5f5;
-    padding:20px;
+    padding:10px;
 }
 
 .docs-body h3{
