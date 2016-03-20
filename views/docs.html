@@ -9,16 +9,17 @@
     </div>
 </div>
 <div class="row">
-    <div class="small-3 columns hide-for-small-only">
+    <div id="sidebar" class="small-3 columns hide-for-small-only">
         <div class="docs-nav">
-            <h4>General Docs</h4>
+            <h4>General</h4>
             <ul>
                 <li><a ng-click="goToElement('generalStuff')">> Main Information.</a></li>
                 <li><a ng-click="goToElement('globalConfigs')">> Global Configs.</a></li>
+                <li><a ng-click="goToElement('callbackActions')">> Callbacks</a></li>
             </ul>
         </div>
         <div class="docs-nav">
-            <h4>Route Configs</h4>
+            <h4>Routes</h4>
             <ul>
                 <li><a ng-click="goToElement('bindTo')">> bindTo</a></li>
                                 <li><a ng-click="goToElement('getObject')">> get_object</a></li>
@@ -38,7 +39,7 @@
         </div>
     </div>
     <div class="columns">
-        <div class="docs-body" style="height:100vh; overflow-y:auto;">
+        <div class="docs-body" <!--style="height:100vh; overflow-y:auto;"-->>
             <div id="generalStuff">
                 <h3 id="general_docs"># General Configs</h3>
                 <p><b style="color:#2582fc;">UnoCMS</b> takes away the heavy lifting of creating and defining hard-coded CRUD functions, and overall site/app structure. The framework uses 3 controllers: </p>
@@ -48,7 +49,46 @@
                     <li><h5>MyCtrl:</h5><p>This controller is where you would place all custom scope functions/actions, variables, callbacks functions and so on.</p></li>
                 </ul>
                 <p>Uno uses <b>Firebase</b> for user authentication with internal site membership and also social network platforms. You can easily cchange the firebase url in the configs to your firebase app to initialize membershiping.</p>
-                <p class="callout text-center" style="color:#2582fc; font-weight:bold;">If a user is signed in, it would create a scope object called <em>currentUser</em>  which can be used for login checking purposes and other data related to a logged in user.</p>
+<p class="callout text-center" style="color:#2582fc; font-weight:bold;">If a user is signed in, it would create a scope object called <em>currentUser</em>  which can be used for login checking purposes and other data related to a logged in user.</p>  
+                <hr>
+                <div id="callbackActions">
+                    <h3># Callbacks</h3>
+                    <p>Callback actions are used for route changes and when CRUD based actions have finished(defined in the route-data and route-configs section). Callbacks also use a single parameter within the function. Route callbacks pass the routes scope object as a parameter in order to use route data within the callback action. For CRUD action callbacks, you can specify which parameters you wish to include and use for the callback which will be stored in an array as the single parameter. You define callback actions in the <em>MyCtrl.js</em> file which will do what ever you wish. Example below</p>
+                <pre><code>
+                // Route Setup
+                db: ['blog_posts', 'blog_comments'],
+                dbRelations: [
+                    blog_posts: ['blog_comments', 'parent_id']
+                ],
+                ...
+                {
+                    route: '/post:child'
+                    template: 'views/post.html',
+                    callback: 'postViewedCallback',
+                    data: [
+                        {bindTo_blog_posts: []},
+                        {insertFor_blog_comments: [['parent_id', 'createdAt', 'comment', 'user_id', 'likes'], ['commentAdded', 'db', 'obj']]}
+                    ]
+                }
+                
+                // Callback Setup
+                
+                uno.controller('CustomCtrl', function(scope){
+                    scope.postViewedCallback = function(params){
+                        console.log(params); // logs the  scope object of the '/post' route data.
+                    };
+                    
+                    scope.commentAdded(params){
+                        console.log(params['obj']); // logs the object of the comment a user posts.
+                        console.log(params['db']); // logs the database where the object is bound to in this case 'blog_comments'
+                    };
+                };
+                
+               
+                
+                </code></pre>
+                <p class="callout" style="font-weight:bold; color:#2582fc;">Don't worry if this seems complicated as of now, all information related to route structure and data is listed in the <em>Routes</em> section.</p>
+                </div>  <hr>
                 <div id="globalConfigs">
                 <h3># Global Configurations</h3>
                 <p>Theres a number of configurations used to setup and manage your site/app's overall functionality and behavior depending on what you wish to accomplish. the base project setup when you first clone the repo, has preset configs already but below is a list of all of them.</p>
@@ -84,13 +124,13 @@
                         <p class="callout error text-center" style="color:#fff; font-weight:bold;">Uno uses static database columns, and dynamic variables throughout the framework such as <em>parent_id</em>, <em>user_id</em>, and <em>createdAt</em>(for time). The <em>user_id</em> column relates to the users id (obviously right?)  and when using it in <em>insertFor</em> route-actions or even <em>updateFor</em>, it automatically pulls the currently logged in user's id and sets it in the query (More Info on insertFor and updateFor route-configs below). As for <em>parent_id</em>, this is the retrieves and sets the value of a routes <em>:child</em> parameter when using it in <em>insertFor</em> and <em>updateFor</em> actions. You must include these columns in your database structure in order for the dynamics to perform properly.</p>
                     </li>
                     <li>
-                        <h4>editorCols: [columns]</h4>
+                    <h4>editorCols: [columns]</h4>
                         <p>This sets the column names of databases which will are used for editors. Example below</p>
                     <pre><code>
                     db: ['blog_posts'],
                     editorCols: ['body'] // the 'body' field of blog_posts
                     </code></pre>
-                        <p class="callout error">*NOTE*: All editor columns in the database must be set to <b>LONGTEXT</b> instead of <b>nvarchar</b> due to the html input which can take up alot of characters.</p>
+                        <p class="callout error text-center" style="font-weight:bold; color:#fff">All editor columns in the database must be set to <b>LONGTEXT</b> instead of <b>nvarchar</b> due to the html input which can take up alot of characters.</p>
                     </li>
                     <li>
                         <h4>modRanks: [ranks]</h4>
@@ -114,7 +154,6 @@
                 </ul>
                 </div>
             </div>
-            <p><b>**NOTE**:</b> static columns such as <em>user_id</em> and <em>parent_id</em> are automatically set within the query to the current loggedin user, and the <b>:child</b> parameter value of the route.</p>
             <div class="callout">
                 <h3># Route-Data Callbacks</h3>
                 <p>Route callbacks are actions you create that would be triggered after a certain action was called in your route_data configs.</p>

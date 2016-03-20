@@ -27,6 +27,4 @@ var Configs = {
     global_data: [
         {set_object: ['unoVersion', 1.0]},
     ],
-
-    textEditor:''
 };
