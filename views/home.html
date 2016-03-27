@@ -1,5 +1,6 @@
+<div class="homeWrapper animated fadeIn">
 <div id="content">
-    <div class="row align-middle" style="height:100vh">
+    <div id="logoHeading" class="row align-middle border" style="height:100vh">
         <div class="small-12 columns">
             <div class="middle">
                 <div id="titleText">
@@ -47,7 +48,7 @@
 </div>
 <div id="template-info">
     <div class="middle">
-        <div class="row align-middle" style="margin-bottom:30px; height:100vh">
+        <div id="infoTab" class="row align-middle border" style="margin-bottom:30px; height:100vh">
             <div class="small-12 columns" style="margin-bottom:-380px;">
                 <h1 style="color:#fff; font-size:70px;" class="text-shadow">And Much More!</h1>
 <p style="color:#fff; font-size:20px;" class="text-shadow"><b>Get Involved</b> by cloning the repository and checkout UnoCMS for yourself! We have a detailed documentation page that goes every every feature and option UnoCMS has to offer along with other information to improve development time and quality.</p>
@@ -78,9 +79,21 @@
 </div>
 <script>
     var paralax = function(){
+    var element = document.getElementById('infoTab');
+    var heading = document.getElementById('logoHeading');
+    var ele = element.getBoundingClientRect();
+    var logoHeader = heading.getBoundingClientRect();
+        console.log(ele.top + '-Doc Tab :)');
+        console.log(logoHeader.top + '-Logo Tab');
+        console.log('***'+document.documentElement.clientHeight+'***');
+        
+        if(logoHeader.top == 0){
+            console.log('TOP OF THE CROP!!');
+        }
+        
         var ypos = window.pageYOffset;
         var content = document.getElementById('content');
-        var subContent = document.getElementById('subContent')
+        var subContent = document.getElementById('subContent');
         var titleText = document.getElementById('titleText');
         var tempInfo = document.getElementById('template-info');
         var specs_1 = document.getElementById('specs_1');
@@ -88,7 +101,6 @@
         var repo = document.getElementById('repo-tab');
         
         content.style.top = ypos * 0.7 + 'px';
-        
         console.log(ypos);
         
         if(ypos >= 70){
@@ -171,3 +183,4 @@
     }
     window.addEventListener('scroll', paralax);
 </script>
+</div>

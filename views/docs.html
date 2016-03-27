@@ -1,8 +1,9 @@
-
-<div id="heade" class="title-bar" style="z-index:999">
+<div id="heade" class="title-bar animated fadein" style="z-index:999">
     <div class="title-bar-left">
-        <img src="uploads/img/unoIcon.png" alt="" style="height:30px;"/>
-        <span class="title-bar-title">UnoCMS: <b>Documentation</b></span>
+        <a class="homeLink" ng-href="#/home">
+            <img src="uploads/img/unoIcon.png" alt="" style="height:30px;"/>
+            <span class="title-bar-title">UnoCMS: <b>Documentation</b></span>
+        </a>
     </div>
     <div class="title-bar-right">
         <a type="button hollow">Sup</a>
@@ -22,23 +23,24 @@
             <h4>Routes</h4>
             <ul>
                 <li><a ng-click="goToElement('bindTo')">> bindTo</a></li>
-                                <li><a ng-click="goToElement('getObject')">> get_object</a></li>
-                                <li><a ng-click="goToElement('getObjectBy')">> get_object_by</a></li>
-                                <li><a ng-click="goToElement('insertFor')">> insertFor</a></li>
-                                <li><a ng-click="goToElement('updateFor')">> updateFor</a></li>
-                                <li><a ng-click="goToElement('deleteFrom')">> deleteFrom</a></li>
-                                <li><a ng-click="goToElement('addMod')">> add_modifier</a></li>
-                                <li><a ng-click="goToElement('getRelatives')">> get_relatives</a></li>
-                                <li><a ng-click="goToElement('getEditor')">> get_editor</a></li>
-                                                <li><a ng-click="goToElement('addUpload')">> add_upload</a></li>
-                                <li><a ng-click="goToElement('setSpecials')">> set_specials</a></li>
-                                <li><a ng-click="goToElement('parentDb')">> parent_db</a></li>
-                                <li><a ng-click="goToElement('watcher')">> add_watcher</a></li>
-                                <li><a ng-click="goToElement('updater')">> add_updater</a></li>
+                <li><a ng-click="goToElement('getObject')">> get_object</a></li>
+                <li><a ng-click="goToElement('getObjectBy')">> get_object_by</a></li>
+                <li><a ng-click="goToElement('insertFor')">> insertFor</a></li>
+                <li><a ng-click="goToElement('updateFor')">> updateFor</a></li>
+                <li><a ng-click="goToElement('deleteFrom')">> deleteFrom</a></li>
+                <li><a ng-click="goToElement('addMod')">> add_modifier</a></li>
+                <li><a ng-click="goToElement('getRelatives')">> get_relatives</a></li>
+                <li><a ng-click="goToElement('getEditor')">> get_editor</a></li>
+                                <li><a ng-click="goToElement('addUpload')">> add_upload</a></li>
+                <li><a ng-click="goToElement('setSpecials')">> set_specials</a></li>
+                <li><a ng-click="goToElement('parentDb')">> parent_db</a></li>
+                <li><a ng-click="goToElement('watcher')">> add_watcher</a></li>
+                <li><a ng-click="goToElement('updater')">> add_updater</a></li>
             </ul>
         </div>
     </div>
-    <div class="columns">
+    <div class="columns animated bounceinRight">
+        
         <div class="docs-body" <!--style="height:100vh; overflow-y:auto;"-->>
             <div id="generalStuff">
                 <h3 id="general_docs"># General Configs</h3>
@@ -154,19 +156,52 @@
                 </ul>
                 </div>
             </div>
-            <div class="callout">
-                <h3># Route-Data Callbacks</h3>
-                <p>Route callbacks are actions you create that would be triggered after a certain action was called in your route_data configs.</p>
-                <p>For Example:</p>
-                <pre><code>
-                db: ['blog_posts'],
-                ...
-                data:[
-                    {get_blog_posts_updateEditor: ['postBodyField', ['title', 'picture', 'body', 'user_id', 'excerpt', 'category'], ['postUpdated', 'obj', 'user_id']]},
-                ]
-                </code></pre>
-            </div><hr>
             <h3 id="routeDataDocs"># Route Configurations</h3>
+            <p>When defining a route, it only takes 4 settings. 2 of which are not mandatory depending on what you wish to accomplish.</p>
+            <ul class="global-configs">
+                <li>
+                    <h4>route:</h4>
+                    <p>Defines the path of the route.</p>
+                </li>
+                <li>
+                    <h4>template:</h4>
+                    <p>Defines the path of the template file of the route.</p>
+                </li>
+                <li>
+                    <h4>callback: (Not required)</h4>
+                    <p>Defines the name of the callback function which would be called when the route has finished loading.</p>
+                </li>
+                <li>
+                    <h4>data: (Required if the isStatic setting is set to false in the configs.js file)</h4>
+                    <p>Defines an array of objects which would initialize data objects and functions depending on the data-configs you set.</p>
+                </li>
+            </ul>
+            <p></p>
+            <p class="callout info">The routing system is based on a parent-child structure and dynamically sets all of the data defined within the route's <b>data: []</b> setting within the scope object which gets reset updated and cleaned whenever a user changes routes preventing the scope from becoming populated with meaningless data and information that doesnt pertain to the route itself and makes runtime smoother. The routing structure also limits the risks of both extensive route urls and security issues when it comes to permissions, making the routes a configuration matter, lots of previous problems with route management are now non-existent with Uno. Below is an overview of the configurations needed to create routes and the data-options available as of now. </p>
+            <div>
+                <p class="callout info">
+                    All routes are writin within the <b>route_data.js</b> file.
+                </p>    
+                <ul class="global-configs">
+                    <li>
+                        <h4>route: [path]</h4>
+                        <p>This defines the actual path of the route which the data, template, and other configs of the route will be bound to. Below is an example of how a parent and child route would be defined.</p>
+                        <pre><code>
+                            // This is a parent-route, which can be used to display all blog post objects.
+                            db: ['blog_posts'], // This would be defined in the configs.js file.
+                            ...
+                            
+                            {
+                                route: '/blog_page',
+                                ...
+                            }
+                        </code></pre>
+                    </li>
+                    <li>
+                    </li>
+                </ul>
+            </div>
+            <hr>
             <div id="bindTo" class="config-option">
                 <code>bindTo_[table_name]: []</code>
 

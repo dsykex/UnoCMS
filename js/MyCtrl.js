@@ -1,9 +1,7 @@
-uno.controller('CustomCtrl', function($location, $timeout, $scope, $http, _uno, $rootScope){
+uno.controller('CustomCtrl', function($location, $timeout, $scope, $http, _uno, $rootScope, geolocation){
     $scope.isStatic = Configs.isStatic;
-    
     var calcPos = function(){
         var elem = document.getElementById('sidebar');
-        elem.style.position = 'relative';
         elem.style.top = window.pageYOffset;
     };
     

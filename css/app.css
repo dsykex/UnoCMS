@@ -27,14 +27,33 @@ hr{
 
 .callout.error{
     background: red;
+    color:#fff;
+    font-weight:bold;
+}
+
+.callout.info{
+    background-color: aliceblue;
+    color:#2582fc;
+   border:1px solid #d1d1d1;
+    opacity:0.8;
+}
+
+.callout.info b{
+    font-style:italic;
+    color:#2582fc;
 }
 
 .config-option{
     padding:15px;
-    border:1px solid #d1d1d1;
+    border:none;
     background:#f7f7f7;
     border-radius:8px;
 }
+
+.homeLink {
+    color:#fff;
+}
+
 
 pre{
     margin-bottom:15px;
@@ -56,6 +75,7 @@ pre{
 
 .global-configs li h4{
     color:#2582fc;
+    font-weight: bold;
     font-size:20px;
 }
 
