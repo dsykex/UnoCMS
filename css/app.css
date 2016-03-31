@@ -38,6 +38,10 @@ hr{
     opacity:0.8;
 }
 
+#sidebar{
+    position: relative;
+}
+
 .callout.info b{
     font-style:italic;
     color:#2582fc;
@@ -54,6 +58,12 @@ hr{
     color:#fff;
 }
 
+.sec-panel{
+    background:#f1f1f1; 
+    border:1px solid #fefefe; 
+    padding:10px;
+    border-radius:7px
+}
 
 pre{
     margin-bottom:15px;
@@ -114,6 +124,13 @@ h2{
     font-size:13px;
     color:#2582fc;
     letter-spacing: 3px;
+}
+
+.docs-nav > h5{
+    text-transform: uppercase;
+    font-size:11px;
+    color:#333;
+    letter-spacing: 1px;
 }
 
 .docs-nav ul{

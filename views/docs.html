@@ -20,7 +20,8 @@
             </ul>
         </div>
         <div class="docs-nav">
-            <h4>Routes</h4>
+            <h4><a ng-click="goToElement('routes')">Routes</a></h4>
+            <h5><a ng-click="goToElement('routeData')">> Route Data</a></h5>
             <ul>
                 <li><a ng-click="goToElement('bindTo')">> bindTo</a></li>
                 <li><a ng-click="goToElement('getObject')">> get_object</a></li>
@@ -41,7 +42,7 @@
     </div>
     <div class="columns animated bounceinRight">
         
-        <div class="docs-body" <!--style="height:100vh; overflow-y:auto;"-->>
+        <div class="docs-body"> <!--style="height:100vh; overflow-y:auto;"-->
             <div id="generalStuff">
                 <h3 id="general_docs"># General Configs</h3>
                 <p><b style="color:#2582fc;">UnoCMS</b> takes away the heavy lifting of creating and defining hard-coded CRUD functions, and overall site/app structure. The framework uses 3 controllers: </p>
@@ -52,6 +53,20 @@
                 </ul>
                 <p>Uno uses <b>Firebase</b> for user authentication with internal site membership and also social network platforms. You can easily cchange the firebase url in the configs to your firebase app to initialize membershiping.</p>
 <p class="callout text-center" style="color:#2582fc; font-weight:bold;">If a user is signed in, it would create a scope object called <em>currentUser</em>  which can be used for login checking purposes and other data related to a logged in user.</p>  
+                <hr>    
+                <div id="backend" class="sec-panel">
+                    <h3># Backend Service</h3>
+                    <ul class="global-configs">
+                        <li>
+                            <h4># Posting Data</h4>
+                            <p>
+                                Uno uses custom functions to handle $http post's requests which is really a pre-set function.
+                            </p>
+                            <b>uno.post(sqlQuery).success(function(data){ ... });</b>
+                            <p>This simply executes the <em>sqlQuery</em> given without the need of specifing the url of the script.</p>
+                        </li>
+                    </ul>
+                </div>
                 <hr>
                 <div id="callbackActions">
                     <h3># Callbacks</h3>
@@ -98,7 +113,6 @@
                     <li>
                         <h4>siteTitle: [title]</h4>
                         <p>This sets the title of the site to display in the header bar.</p>
-                    
                     </li>
                     <li>
                         <h4>BACKEND_URL: [firebaseUrl]</h4>
@@ -111,10 +125,10 @@
                     <li>
                         <h4>db: [database_tables]</h4>
                         <p>Assigns the databases which the site will use and manipulate. each database assigned will set a scope object by the name of the database table. Example below.</p>
-                    <pre><code>
-                    db: ['users', 'user_messages']
-                    // scope object would be scope.users and scope.user_messages
-                    </code></pre>
+                        <pre><code>
+                        db: ['users', 'user_messages']
+                        // scope object would be scope.users and scope.user_messages
+                        </code></pre>
                     </li>
                     <li>
                         <h4>dbRelations: [parent_database: [child_database, column]]</h4>
@@ -155,8 +169,8 @@
                     </li>
                 </ul>
                 </div>
-            </div>
-            <h3 id="routeDataDocs"># Route Configurations</h3>
+            </div><hr>
+            <h3 id="routes"># Route Configurations</h3>
             <p>When defining a route, it only takes 4 settings. 2 of which are not mandatory depending on what you wish to accomplish.</p>
             <ul class="global-configs">
                 <li>
@@ -202,6 +216,7 @@
                 </ul>
             </div>
             <hr>
+            <div id="routeData">
             <div id="bindTo" class="config-option">
                 <code>bindTo_[table_name]: []</code>
 
@@ -604,6 +619,7 @@
             <p style="margin-top:22px;">
                 If a user, say for instance, changes the title of the <b>blog_posts</b> object or even the body, the updater would pull the changes and apply them to the object. So users can see changes and fixes in realtime.
             </p>
+</div>
 </div>
 </div>
 </div>
