@@ -11,12 +11,12 @@ var Configs = {
     /*-----   Database Configs  -----*/
     /*-------------------------------*/
 
-    db_host: '127.0.0.1',
-    db_name: 'mydb',
-    db_username: 'root',
-    db_password: 'maxwel123',
+    db_host: '',
+    db_name: '',
+    db_username: '',
+    db_password: '',
 
-    db: ['chats', 'users'],
+    db: [],
     dbRelations: [],
     editorCols: [],
 
