@@ -73,9 +73,10 @@ uno.directive('uEditor', function(){
         replace:true,
         link: function(scope, element, attr){
             scope.eId = attr.eid;
+            scope.btxt = attr.btxt;
         },
         templateUrl: function(elem,attr){
-            return Configs.partialDir+'forms/editor-'+attr.type+'.html';
+            return 'views/partials/forms/editor-'+attr.type+'.html';
         }
     };
 });

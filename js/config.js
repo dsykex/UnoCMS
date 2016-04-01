@@ -4,29 +4,27 @@
 
 var Configs = {
     //Change this to your firebase url
-    
+
     BACKEND_URL: 'https://dsykes.firebaseio.com/',
-    isStatic: true,
-    
+    isStatic: false,
+
     /*-----   Database Configs  -----*/
     /*-------------------------------*/
-    
-    //db_host: '<HOSTNAME>',
-    //db_name: '<DB_NAME>',
-    //db_username: '<DB_USER>',
-    //db_password: '<DB_PASSWORD>',
 
-    db: [],
+    db_host: '127.0.0.1',
+    db_name: 'mydb',
+    db_username: 'root',
+    db_password: 'maxwel123',
+
+    db: ['chats', 'users'],
     dbRelations: [],
     editorCols: [],
 
     modRanks: ['a', 'md'],
 
     isStrict: [false],
-    
+
     global_data: [
         {set_object: ['unoVersion', 1.0]},
     ],
-
-    textEditor:''
 };

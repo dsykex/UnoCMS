@@ -25,5 +25,5 @@
         <div ng-switch-when="img"><img ng-if="preview" style="width:210px; height:210px; margin:15px;" src="{{preview}}" alt="" /></div>
         <div ng-switch-when="vid"><video ng-if="preview" controls><source ng-src="{{preview}}" type="video/mp4"></video></div>
     </div>
-    <input type="submit" class="button radius" ng-click="submit_editor(obj)" value="Add Comment" />
+    <input type="submit" class="button radius" ng-click="submit_editor(obj)" value="{{btxt}}" />
 </div>

@@ -41,43 +41,14 @@ uno.controller('Ctrl', function($route, $timeout, $scope, fbAuth, _uno, $interva
             if(value !== undefined){
                 _routeFound=true;
                 if(!Configs.isStatic){
-                    if(value.needLogin){
-                        if($scope.currentUser){
-                            if(value.accessLevel !== '*'){
-                                angular.forEach(value.accessLevel, function(level){
-                                    if($scope.currentUser.rank == level){
-                                        allowed = true;
-                                        if(value.data.length)
-                                            _uno.route_data($scope, value.data, value);
-                                    }
-                                });
-
-                                if(!allowed){
-                                    angular.forEach(route_data._, function(r){
-                                        if(r.homePage)
-                                            $location.path(r.route);
-                                    });
-                                }
-                            }else
-                                if(value.data.length)
-                                    _uno.route_data($scope, value.data, value);
-
-                        }
-                        else
-                        {
-                            angular.forEach(route_data._, function(r){
-                                if(r.homePage)
-                                    $location.path(r.route);
-                            });
-                        }
-                    }else{
-                        if(value.data.length){
-                            _uno.route_data($scope, value.data, value);
-
-                        }
+                    if(value.data)
+                        _uno.route_data($scope, value.data, value);
+                    else{
+                        _uno.route_data($scope, undefined, value);
                     }
+
                 }else{
-                    console.log(Configs.isStatic);
+
                 }
 
             }else{

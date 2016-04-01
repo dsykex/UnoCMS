@@ -305,54 +305,191 @@ uno.factory('_uno', function(fbAuth, geolocation, $http, $timeout, $firebaseArra
     };
 
     fact.route_data = function(scope, data_set, route){
-        angular.forEach(data_set, function(_value){
+        if(data_set !== undefined){
+            angular.forEach(data_set, function(_value){
 
-            angular.forEach(Configs.db, function(db_name){
-                if(_value['get_'+db_name]){
+                angular.forEach(Configs.db, function(db_name){
+                    if(_value['get_'+db_name]){
 
-                    angular.forEach(_value, function(_val){
-                        if(_val[0] != 'parent'){
-                            fact.get_object(scope, _val[0], db_name, _val[1], _val[2], _val[3]);
-                        }else{
-                            fact.get_object(scope, 'obj', db_name, 'id', $routeParams.child, false);
-                            if(scope.obj.parent_id){
-                                fact.get_object(scope, 'parentObj', _val[1], 'id', scope.obj.parent_id, false);
+                        angular.forEach(_value, function(_val){
+                            if(_val[0] != 'parent'){
+                                fact.get_object(scope, _val[0], db_name, _val[1], _val[2], false);
+                            }else{
+                                fact.get_object(scope, 'obj', db_name, 'id', $routeParams.child, false);
+                                if(scope.obj.parent_id){
+                                    fact.get_object(scope, 'parentObj', _val[1], 'id', scope.obj.parent_id, false);
+                                }
                             }
+                        });
+                    }
+
+                    if(_value['get_'+db_name+'_list']){
+                        angular.forEach(_value, function(_val){
+                            fact.get_object(scope, _val[0], db_name, _val[1], _val[2], true);
+                        });
+                    }
+
+                    if(_value['get_'+db_name+'_count']){
+                        console.log('Count Called!');
+                        angular.forEach(_value,function(_val){
+                            var func = db_name+'_count';
+                            console.log(func);
+                            fact.get_child_count(scope, func, db_name);
+                        });
+                    }
+
+                    if(_value['bindTo_'+db_name]){
+                        angular.forEach(_value, function(_val){
+                            fact.get_object(scope, 'obj', db_name, 'id', $routeParams.child, false);
+                            if(scope.obj){
+                                angular.forEach(Configs.editorCols, function(col){
+                                   if(scope.obj[col])
+                                       scope.obj[col] = $sce.trustAsHtml(scope.obj[col].toString());
+                                });
+                                if(scope.obj.parent_id !== undefined){
+                                    angular.forEach(Configs.dbRelations, function(dbRels){
+                                       var key = Object.keys(dbRels)[0];
+                                       angular.forEach(dbRels, function(rels){
+                                           if(rels.indexOf(db_name) != -1 && rels.indexOf('parent_id') != -1){
+                                               fact.get_object(scope, 'parentObj', key, 'id', scope.obj.parent_id, false);
+                                           }
+                                       });
+                                    });
+                                }
+
+                                angular.forEach(Configs.dbRelations, function(dbRels){
+                                    var key = Object.keys(dbRels)[0];
+                                    if(db_name == key){
+                                        var values = dbRels[key];
+                                        if(values[1] == 'parent_id'){
+                                            fact.get_children(scope, 'get_'+values[0], 'child_'+values[0], values[0], values[1]);
+                                        }
+                                    }
+                                });
+                            }else{
+                                ////console.log('DERP');
+                                $location.path('/404');
+                            }
+                        });
+                    }
+
+                    if(_value['get_'+db_name+'_by']){
+                        angular.forEach(_value, function(_val){
+                            fact.get_by_object(scope, db_name, _val[0], _val[1], _val[2], _val[3]);
+                        });
+                    }
+
+                    if(_value['add_'+db_name+'_watcher']){
+                        angular.forEach(_value, function(_val){
+                             fact.watchdb(scope, db_name);
+                        });
+                    }
+
+                    if(_value['add_'+db_name+'_updater']){
+                        angular.forEach(_value, function(_val){
+                            fact.auto_update(scope, db_name);
+                        });
+                    }
+
+                    if(_value['add_'+db_name+'_modifier']){
+                        angular.forEach(_value, function(_val){
+                            fact.add_modifier(scope, db_name+'_'+_val[0]+'_mod', db_name, _val[0], _val[1], _val[2]);
+                        });
+                    }
+
+                    if(_value['deleteFrom_'+db_name]){
+                        angular.forEach(_value,function(_val){
+
+                             fact.add_delete(scope, db_name+'_remover', db_name, _val[0], _val[1]);
+                        });
+                    }
+
+                    if(_value['get_'+db_name+'_insertEditor']){
+                        angular.forEach(_value, function(_val){
+                            fact.editor(scope, _val[0], db_name, _val[1], true, _val[2]);
+                        });
+                    }
+
+                    if(_value['get_'+db_name+'_updateEditor']){
+                        angular.forEach(_value, function(_val){
+                            fact.editor(scope, _val[0], db_name, _val[1], false, _val[2]);
+                        });
+                    }
+
+                    if(_value['updateFor_'+db_name]){
+                        angular.forEach(_value,function(_val){
+                            fact.update_data(scope, db_name+'_updater', '', db_name, _val[0], _val[1]);
+                        });
+                    }
+
+                    if(_value['insertFor_'+db_name]){
+                        angular.forEach(_value, function(_val){
+                            fact.insert_data(scope, db_name+'_inserter', '', db_name, _val[0], _val[1]);
+                        });
+                    }
+
+                    angular.forEach(scope, function(sObj){
+                        //var scope_keys = Object.keys(sObj);
+                        //console.log(sObj);
+                        if(_value['set_'+sObj+'_filter']){
+                            console.log('FOUND IT');
+                            angular.forEach(_value, function(_val){
+                                fact.filter_content(scope, _val[1], _val[2], sObj);
+                            });
+                        }
+                    });
+                });
+
+                if(_value.get_object){
+                    angular.forEach(_value, function(_val){
+                        switch(_val[0]){
+                            case 'parent':{
+                                fact.get_object(scope, 'obj', _val[1], 'id', $routeParams.child, false);
+                                if(scope.obj){
+                                    angular.forEach(Configs.editorCols, function(col){
+                                       if(scope.obj[col])
+                                           scope.obj[col] = $sce.trustAsHtml(scope.obj[col].toString());
+                                    });
+                                    if(scope.obj.parent_id !== undefined){
+                                        fact.get_object(scope, 'parentObj', _val[2], 'id', scope.obj.parent_id);
+                                    }
+                                    ////console.log(scope.parentObj);
+                                }else{
+                                    $location.path('/404');
+                                }
+                            }break;
+                            case 'children': {
+                                fact.get_children(scope, _val[1], _val[2], _val[3], _val[4]);
+                            }break;
+                            case 'specific':{
+                                fact.get_object(scope, _val[1], _val[2], _val[3], _val[4], _val[5]);
+                            }break;
                         }
                     });
                 }
 
-                if(_value['get_'+db_name+'_count']){
-                    console.log('Count Called!');
-                    angular.forEach(_value,function(_val){
-                        var func = db_name+'_count';
-                        console.log(func);
-                        fact.get_child_count(scope, func, db_name);
-                    });
-                }
-
-                if(_value['bindTo_'+db_name]){
+                if(_value.bindTo){
                     angular.forEach(_value, function(_val){
-                        fact.get_object(scope, 'obj', db_name, 'id', $routeParams.child, false);
+                        fact.get_object(scope, 'obj', _val[0], 'id', $routeParams.child, false);
                         if(scope.obj){
                             angular.forEach(Configs.editorCols, function(col){
                                if(scope.obj[col])
                                    scope.obj[col] = $sce.trustAsHtml(scope.obj[col].toString());
                             });
+
                             if(scope.obj.parent_id !== undefined){
                                 angular.forEach(Configs.dbRelations, function(dbRels){
                                    var key = Object.keys(dbRels)[0];
                                    angular.forEach(dbRels, function(rels){
-                                       if(rels.indexOf(db_name) != -1 && rels.indexOf('parent_id') != -1){
+                                       if(rels.indexOf(_val[0]) != -1 && rels.indexOf('parent_id') != -1){
                                            fact.get_object(scope, 'parentObj', key, 'id', scope.obj.parent_id, false);
                                        }
                                    });
                                 });
                             }
-
                             angular.forEach(Configs.dbRelations, function(dbRels){
                                 var key = Object.keys(dbRels)[0];
-                                if(db_name == key){
+                                if(_val[0] == key){
                                     var values = dbRels[key];
                                     if(values[1] == 'parent_id'){
                                         fact.get_children(scope, 'get_'+values[0], 'child_'+values[0], values[0], values[1]);
@@ -360,280 +497,153 @@ uno.factory('_uno', function(fbAuth, geolocation, $http, $timeout, $firebaseArra
                                 }
                             });
                         }else{
-                            ////console.log('DERP');
                             $location.path('/404');
                         }
                     });
                 }
 
-                if(_value['get_'+db_name+'_by']){
+
+                if(_value.get_by_object){
                     angular.forEach(_value, function(_val){
-                        fact.get_by_object(scope, db_name, _val[0], _val[1], _val[2], _val[3]);
+                        fact.get_by_object(scope, _val[0], _val[1], _val[2], _val[3], _val[4]);
                     });
                 }
 
-                if(_value['add_'+db_name+'_watcher']){
+                if(_value.parent_db){
                     angular.forEach(_value, function(_val){
-                         fact.watchdb(scope, db_name);
-                    });
-                }
-
-                if(_value['add_'+db_name+'_updater']){
-                    angular.forEach(_value, function(_val){
-                        fact.auto_update(scope, db_name);
-                    });
-                }
-
-                if(_value['add_'+db_name+'_modifier']){
-                    angular.forEach(_value, function(_val){
-                        fact.add_modifier(scope, db_name+'_'+_val[0]+'_mod', db_name, _val[0], _val[1], _val[2]);
-                    });
-                }
-
-                if(_value['deleteFrom_'+db_name]){
-                    angular.forEach(_value,function(_val){
-
-                         fact.add_delete(scope, db_name+'_remover', db_name, _val[0], _val[1]);
-                    });
-                }
-
-                if(_value['get_'+db_name+'_insertEditor']){
-                    angular.forEach(_value, function(_val){
-                        fact.editor(scope, _val[0], db_name, _val[1], true, _val[2]);
-                    });
-                }
-
-                if(_value['get_'+db_name+'_updateEditor']){
-                    angular.forEach(_value, function(_val){
-                        fact.editor(scope, _val[0], db_name, _val[1], false, _val[2]);
-                    });
-                }
-
-                if(_value['updateFor_'+db_name]){
-                    angular.forEach(_value,function(_val){
-                        fact.update_data(scope, db_name+'_updater', '', db_name, _val[0], _val[1]);
-                    });
-                }
-
-                if(_value['insertFor_'+db_name]){
-                    angular.forEach(_value, function(_val){
-                        fact.insert_data(scope, db_name+'_inserter', '', db_name, _val[0], _val[1]);
-                    });
-                }
-
-                angular.forEach(scope, function(sObj){
-                    //var scope_keys = Object.keys(sObj);
-                    //console.log(sObj);
-                    if(_value['set_'+sObj+'_filter']){
-                        console.log('FOUND IT');
-                        angular.forEach(_value, function(_val){
-                            fact.filter_content(scope, _val[1], _val[2], sObj);
-                        });
-                    }
-                });
-            });
-
-            if(_value.get_object){
-                angular.forEach(_value, function(_val){
-                    switch(_val[0]){
-                        case 'parent':{
-                            fact.get_object(scope, 'obj', _val[1], 'id', $routeParams.child, false);
-                            if(scope.obj){
-                                angular.forEach(Configs.editorCols, function(col){
-                                   if(scope.obj[col])
-                                       scope.obj[col] = $sce.trustAsHtml(scope.obj[col].toString());
-                                });
-                                if(scope.obj.parent_id !== undefined){
-                                    fact.get_object(scope, 'parentObj', _val[2], 'id', scope.obj.parent_id);
-                                }
-                                ////console.log(scope.parentObj);
-                            }else{
-                                $location.path('/404');
-                            }
-                        }break;
-                        case 'children': {
-                            fact.get_children(scope, _val[1], _val[2], _val[3], _val[4]);
-                        }break;
-                        case 'specific':{
-                            fact.get_object(scope, _val[1], _val[2], _val[3], _val[4], _val[5]);
-                        }break;
-                    }
-                });
-            }
-
-            if(_value.bindTo){
-                angular.forEach(_value, function(_val){
-                    fact.get_object(scope, 'obj', _val[0], 'id', $routeParams.child, false);
-                    if(scope.obj){
-                        angular.forEach(Configs.editorCols, function(col){
-                           if(scope.obj[col])
-                               scope.obj[col] = $sce.trustAsHtml(scope.obj[col].toString());
-                        });
-
-                        if(scope.obj.parent_id !== undefined){
-                            angular.forEach(Configs.dbRelations, function(dbRels){
-                               var key = Object.keys(dbRels)[0];
-                               angular.forEach(dbRels, function(rels){
-                                   if(rels.indexOf(_val[0]) != -1 && rels.indexOf('parent_id') != -1){
-                                       fact.get_object(scope, 'parentObj', key, 'id', scope.obj.parent_id, false);
-                                   }
-                               });
-                            });
+                        scope.parent_obj = scope[_val[0]].filter(function(v){ return (v.id == $routeParams.child); })[0];
+                        //console.log(scope.parent_obj);
+                        if(scope.parent_obj === undefined){
+                            $location.path('/404');
                         }
-                        angular.forEach(Configs.dbRelations, function(dbRels){
-                            var key = Object.keys(dbRels)[0];
-                            if(_val[0] == key){
-                                var values = dbRels[key];
-                                if(values[1] == 'parent_id'){
-                                    fact.get_children(scope, 'get_'+values[0], 'child_'+values[0], values[0], values[1]);
-                                }
-                            }
-                        });
-                    }else{
-                        $location.path('/404');
-                    }
-                });
-            }
+                    });
+                }
 
+                if(_value.add_watcher){
+                    angular.forEach(_value, function(_val){
+                         fact.watchdb(scope, scope[_val[0]], _val[0]);
+                    });
+                }
 
-            if(_value.get_by_object){
-                angular.forEach(_value, function(_val){
-                    fact.get_by_object(scope, _val[0], _val[1], _val[2], _val[3], _val[4]);
-                });
-            }
+                if(_value.add_specific_watcher){
+                    angular.forEach(_value, function(_val){
+                        fact.watchdb_spec(scope, _val[0], _val[1]);
+                    });
+                }
 
-            if(_value.parent_db){
-                angular.forEach(_value, function(_val){
-                    scope.parent_obj = scope[_val[0]].filter(function(v){ return (v.id == $routeParams.child); })[0];
-                    //console.log(scope.parent_obj);
-                    if(scope.parent_obj === undefined){
-                        $location.path('/404');
-                    }
-                });
-            }
+                if(_value.add_updater){
+                    angular.forEach(_value, function(_val){
+                        fact.auto_update(scope, _val[0]);
+                    });
+                }else{
+                    $interval.cancel(scope.auto_updater);
+                    scope.auto_updater = undefined;
+                }
 
-            if(_value.add_watcher){
-                angular.forEach(_value, function(_val){
-                     fact.watchdb(scope, scope[_val[0]], _val[0]);
-                });
-            }
+                if(_value.set_object){
+                    angular.forEach(_value, function(_val){ fact.assign(scope, _val[0], _val[1]); });
+                }
 
-            if(_value.add_specific_watcher){
-                angular.forEach(_value, function(_val){
-                    fact.watchdb_spec(scope, _val[0], _val[1]);
-                });
-            }
+                if(_value.join_objects){
+                    console.log('JOININGG!');
+                    angular.forEach(_value, function(_val){
+                        fact.join_objects(scope, _val[0], _val[1], _val[2]);
+                    });
+                }
 
-            if(_value.add_updater){
-                angular.forEach(_value, function(_val){
-                    fact.auto_update(scope, _val[0]);
-                });
-            }else{
-                $interval.cancel(scope.auto_updater);
-                scope.auto_updater = undefined;
-            }
+                if(_value.add_upload){
+                    angular.forEach(_value, function(_val){ fact.add_upload(scope, _val[0], _val[1], _val[2]); });
+                }
 
-            if(_value.set_object){
-                angular.forEach(_value, function(_val){ fact.assign(scope, _val[0], _val[1]); });
-            }
+                if(_value.add_insert){
+                    angular.forEach(_value, function(_val){
+                        fact.insert_data(scope, _val[0], _val[1], _val[2], _val[3], _val[4]);
+                    });
+                }
 
-            if(_value.join_objects){
-                console.log('JOININGG!');
-                angular.forEach(_value, function(_val){
-                    fact.join_objects(scope, _val[0], _val[1], _val[2]);
-                });
-            }
+                if(_value.get_location){
+                    angular.forEach(_value, function(_val){
+                        fact.get_location(scope, _val[0]);
+                    });
+                }
 
-            if(_value.add_upload){
-                angular.forEach(_value, function(_val){ fact.add_upload(scope, _val[0], _val[1], _val[2]); });
-            }
+                if(_value.pageTitle){
+                    scope.pageTitle = _value.pageTitle;
+                }
 
-            if(_value.add_insert){
-                angular.forEach(_value, function(_val){
-                    fact.insert_data(scope, _val[0], _val[1], _val[2], _val[3], _val[4]);
-                });
-            }
+                if(_value.set_specials){
+                    angular.forEach(Configs.editorCols, function(col){
+                        if(scope.obj[col])
+                            scope.inputText = scope.obj[col];
+                    });
 
-            if(_value.get_location){
-                angular.forEach(_value, function(_val){
-                    fact.get_location(scope, _val[0]);
-                });
-            }
+                    if(scope.obj['picture'])
+                        scope.thumb = scope.obj['picture'];
 
-            if(_value.pageTitle){
-                scope.pageTitle = _value.pageTitle;
-            }
+                    if(scope.obj['video'])
+                        scope.video = scope.obj['video'];
 
-            if(_value.set_specials){
-                angular.forEach(Configs.editorCols, function(col){
-                    if(scope.obj[col])
-                        scope.inputText = scope.obj[col];
-                });
+                    if(scope.obj['audio'])
+                        scope.audio = scope.obj['audio'];
 
-                if(scope.obj['picture'])
-                    scope.thumb = scope.obj['picture'];
+                    if(scope.obj['file'])
+                        scope.file = scope.obj['file'];
+                }
 
-                if(scope.obj['video'])
-                    scope.video = scope.obj['video'];
+                if(_value.add_update){
+                    angular.forEach(_value,function(_val){
+                       fact.update_data(scope, _val[0], _val[1], _val[2], _val[3], _val[4]);
+                    });
+                }
 
-                if(scope.obj['audio'])
-                    scope.audio = scope.obj['audio'];
+                if(_value.add_delete){
+                    angular.forEach(_value, function(_val){
 
-                if(scope.obj['file'])
-                    scope.file = scope.obj['file'];
-            }
+                        fact.add_delete(scope, _val[0], _val[1], _val[2], _val[3]);
+                    });
+                }
 
-            if(_value.add_update){
-                angular.forEach(_value,function(_val){
-                   fact.update_data(scope, _val[0], _val[1], _val[2], _val[3], _val[4]);
-                });
-            }
+                if(_value.get_editor){
+                    angular.forEach(_value, function(_val){
+                        fact.editor(scope, _val[0], _val[1], _val[2], _val[3], _val[4], _val[5]);
+                    });
+                }
 
-            if(_value.add_delete){
-                angular.forEach(_value, function(_val){
+                if(_value.add_modifier){
+                    angular.forEach(_value, function(_val){
+                        ////console.log('kkk');
+                        fact.add_modifier(scope, _val[0], _val[1], _val[2], _val[3], _val[4]);
+                    });
+                }
 
-                    fact.add_delete(scope, _val[0], _val[1], _val[2], _val[3]);
-                });
-            }
+                if(_value.set_filter){
+                    angular.forEach(_value, function(_val){
 
-            if(_value.get_editor){
-                angular.forEach(_value, function(_val){
-                    fact.editor(scope, _val[0], _val[1], _val[2], _val[3], _val[4], _val[5]);
-                });
-            }
+                        fact.filter_content(scope, _val[1], _val[2], _val[0]);
+                    });
+                }
 
-            if(_value.add_modifier){
-                angular.forEach(_value, function(_val){
-                    ////console.log('kkk');
-                    fact.add_modifier(scope, _val[0], _val[1], _val[2], _val[3], _val[4]);
-                });
-            }
+                if(_value.get_child_count){
+                    angular.forEach(_value,function(_val){
+                        fact.get_child_count(scope, _val[0], _val[1]);
+                    });
+                }
 
-            if(_value.set_filter){
-                angular.forEach(_value, function(_val){
+                if(_value.get_parent_relatives){
+                    angular.forEach(_value, function(_val){
+                        fact.get_parent_relatives(scope, _val[0], _val[1], _val[2]);
+                    });
+                }
 
-                    fact.filter_content(scope, _val[1], _val[2], _val[0]);
-                });
-            }
-
-            if(_value.get_child_count){
-                angular.forEach(_value,function(_val){
-                    fact.get_child_count(scope, _val[0], _val[1]);
-                });
-            }
-
-            if(_value.get_parent_relatives){
-                angular.forEach(_value, function(_val){
-                    fact.get_parent_relatives(scope, _val[0], _val[1], _val[2]);
-                });
-            }
-
-            if(_value.get_relatives){
-                angular.forEach(_value, function(_val){
-                    fact.get_similar_objects(scope, _val[0], _val[1], _val[2], _val[3]);
-                });
-            }
-        });
+                if(_value.get_relatives){
+                    angular.forEach(_value, function(_val){
+                        fact.get_similar_objects(scope, _val[0], _val[1], _val[2], _val[3]);
+                    });
+                }
+            });
+        }else{
+            console.log('No Data!');
+        }
 
         if(route){
             if(route.callback){
@@ -985,12 +995,10 @@ uno.factory('_uno', function(fbAuth, geolocation, $http, $timeout, $firebaseArra
     };
 
     fact.insert_data = function(scope, func, editorId, db, fields, finishCallback){
-        if(scope.currentUser)
             scope[func] = function(o){ fact.insert_action(scope, editorId, db, fields, o, finishCallback); };
     };
 
     fact.insert_action = function(scope, editorId, db, fields, o, finishCallback){
-        if(scope.currentUser){
             var elem = '';
 
             if(editorId !== '')
@@ -1056,10 +1064,10 @@ uno.factory('_uno', function(fbAuth, geolocation, $http, $timeout, $firebaseArra
                     }else{ console.log('UnoError: Callback Function is not defined'); }
                 }
             });
-        }
     };
 
     fact.editor = function(scope, id, db, fields, isInsert, finishCallback){
+        console.log('editor called');
         var attachment = false; var attachType = null;
         angular.element('#'+id).html('<h1>STRERFT</h1>'); scope.showEmoji = false;
 
