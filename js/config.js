@@ -28,3 +28,5 @@ var Configs = {
         {set_object: ['unoVersion', 1.0]},
     ],
 };
+
+console.log(arc);

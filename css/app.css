@@ -25,6 +25,42 @@ body:before {
 
 }
 
+.icon{
+    color:#2582fc;
+    padding:5px;
+    font-size:135px;
+}
+
+.blue-bg{
+    background:#2582fc;
+}
+
+.white-bg{
+    background:#fff;
+}
+
+.dark-grey-bg{
+    background:#1e1e1e;
+}
+
+.button-pos{
+    margin-bottom:-2px;
+    margin-right:10px;
+    padding:10px;
+}
+
+.title-text{
+    color:#fff;
+    font-size:65px;
+}
+
+.icon-text{
+    color:#2582fc;
+    font-size:30px;
+    font-weight:bold;
+    margin:0;
+}
+
 h1,h2,h3,h4,h5,h6{
     font-family: 'Open Sans', sans-serif;
     color:#2582fc;
